@@ -10,7 +10,7 @@
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 #include "DebugCamera.h"
-
+#include <math.h>
 /// <summary>
 /// ゲームシーン
 /// </summary>
@@ -99,9 +99,9 @@ class GameScene {
     };*/
 
 	float afin[4][4] = {
-	  {1.0f, 0.0f, 0.0f, 5.0f},
-	  {0.0f, 1.0f, 0.0f, 5.0f},
-	  {0.0f, 0.0f, 1.0f, 0.0f},
+	  {2.0f, 0.0f, 0.0f, 0.0f},
+	  {0.0f, 2.0f, 0.0f, 0.0f},
+	  {0.0f, 0.0f, 2.0f, 0.0f},
 	  {0.0f, 0.0f, 0.0f, 1.0f}
     };
 
