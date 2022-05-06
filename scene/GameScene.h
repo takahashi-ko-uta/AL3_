@@ -11,6 +11,9 @@
 #include "WorldTransform.h"
 #include "DebugCamera.h"
 #include <math.h>
+
+#define PI 3.141592
+
 /// <summary>
 /// ゲームシーン
 /// </summary>
@@ -92,6 +95,7 @@ class GameScene {
       {2, 6},
       {3, 7},
 	};
+
 	/*float afin[3][3] = {
 	  {1.0f, 0.0f, 5.0f},
 	  {0.0f, 1.0f, 5.0f},
@@ -99,10 +103,10 @@ class GameScene {
     };*/
 
 	float afin[4][4] = {
-	  {2.0f, 0.0f, 0.0f, 0.0f},
-	  {0.0f, 2.0f, 0.0f, 0.0f},
-	  {0.0f, 0.0f, 2.0f, 0.0f},
-	  {0.0f, 0.0f, 0.0f, 1.0f}
+	  {(float)cos(PI / 4), (float)-sin(PI / 4), 0.0f, 0.0f},
+	  {(float)sin(PI / 4), (float) cos(PI / 4), 0.0f, 0.0f},
+	  {				 0.0f,				  0.0f, 1.0f, 0.0f},
+	  {				 0.0f,				  0.0f, 0.0f, 1.0f}
     };
 
 
