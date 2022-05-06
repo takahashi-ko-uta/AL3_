@@ -80,31 +80,37 @@ void GameScene::Draw() {
 	//3Dモデル描画
 	//model_->Draw(worldTransform_, viewProjection_, textureHandle_);
 	//ライン描画が参照するビュープロジェクションを指定する(アドレス渡し)
-	for (int i = 0; i < 12; i++) 
-	{
-		//PrimitiveDrawer::GetInstance()->DrawLine3d(hen[i][0], hen[i][1], Vector4(0, 70, 0, 255)); 
-		PrimitiveDrawer::GetInstance()->DrawLine3d(ten[hen2[i][0]], ten[hen2[i][1]], Vector4(0, 70, 0, 255)); 
+
+	for (size_t i = 0; i < 8; i++) {
+
+		ten[i][0] = (ten_ori[i][0] * afin[0][0]) + (ten_ori[i][1] * afin[0][1]) + (ten_ori[i][2] * afin[0][2]) + (ten_ori[i][3] * afin[0][3]);
+		ten[i][1] = (ten_ori[i][0] * afin[1][0]) + (ten_ori[i][1] * afin[1][1]) + (ten_ori[i][2] * afin[1][2]) + (ten_ori[i][3] * afin[1][3]);
+		ten[i][2] = (ten_ori[i][0] * afin[2][0]) + (ten_ori[i][1] * afin[2][1]) + (ten_ori[i][2] * afin[2][2]) + (ten_ori[i][3] * afin[2][3]);
+		ten[i][3] = (ten_ori[i][0] * afin[3][0]) + (ten_ori[i][1] * afin[3][1]) + (ten_ori[i][2] * afin[3][2]) + (ten_ori[i][3] * afin[3][3]);
 	}
 
-	//PrimitiveDrawer::GetInstance()->DrawLine3d(box[i % 4], box[(i + 1) % 4], Vector4(0, 70, 0, 255));			//1^4 
-	//PrimitiveDrawer::GetInstance()->DrawLine3d(box[i % 4 + 4], box[(i + 1) % 4 + 4], Vector4(0, 70, 0, 255));	//5^8
-	//PrimitiveDrawer::GetInstance()->DrawLine3d(box[i % 4], box[i % 4 +4], Vector4(0, 70, 0, 255));				//縦
+	for (int i = 0; i < 4; i++) 
+	{
+		PrimitiveDrawer::GetInstance()->DrawLine3d(		// 1^4
+		  Vector3(ten[i % 4][0], ten[i % 4][1], ten[i % 4][2]),
+		  Vector3(ten[(i + 1) % 4][0], ten[(i + 1) % 4][1], ten[(i + 1) % 4][2]),
+		  Vector4(0, 70, 0, 255));
+		PrimitiveDrawer::GetInstance()->DrawLine3d(		// 5^8
+		  Vector3(ten[i % 4 + 4][0], ten[i % 4 + 4][1], ten[i % 4 + 4][2]),
+		  Vector3(ten[(i + 1) % 4 + 4][0], ten[(i + 1) % 4 + 4][1], ten[(i + 1) % 4 + 4][2]),
+		  Vector4(0, 70, 0, 255));
+		PrimitiveDrawer::GetInstance()->DrawLine3d(		// 縦
+		  Vector3(ten[i % 4][0], ten[i % 4][1], ten[i % 4][2]),
+		  Vector3(ten[i % 4 + 4][0], ten[i % 4 + 4][1], ten[i % 4 + 4][2]),
+	      Vector4(0, 70, 0, 255));
+		//PrimitiveDrawer::GetInstance()->DrawLine3d(ten[hen2[i][0]], ten[hen2[i][1]], Vector4(0, 70, 0, 255)); 
+	}
 
-	/*
-	PrimitiveDrawer::GetInstance()->DrawLine3d(Vector3(0, 0, 0), Vector3(5, 0, 0), Vector4(255, 0, 0, 255));
-	PrimitiveDrawer::GetInstance()->DrawLine3d(Vector3(5, 0, 0), Vector3(5, 5, 0), Vector4(255, 0, 0, 255));
-	PrimitiveDrawer::GetInstance()->DrawLine3d(Vector3(5, 5, 0), Vector3(0, 5, 0), Vector4(255, 0, 0, 255));
-	PrimitiveDrawer::GetInstance()->DrawLine3d(Vector3(0, 5, 0), Vector3(0, 0, 0), Vector4(255, 0, 0, 255));
+	//PrimitiveDrawer::GetInstance()->DrawLine3d(ten[i % 4], ten[(i + 1) % 4], Vector4(0, 70, 0, 255));			//1^4 
+	//PrimitiveDrawer::GetInstance()->DrawLine3d(ten[i % 4 + 4], ten[(i + 1) % 4 + 4], Vector4(0, 70, 0, 255));	//5^8
+	//PrimitiveDrawer::GetInstance()->DrawLine3d(ten[i % 4], ten[i % 4 +4], Vector4(0, 70, 0, 255));				//縦
 
-	PrimitiveDrawer::GetInstance()->DrawLine3d(Vector3(0, 0, 5), Vector3(0, 5, 5), Vector4(255, 0, 0, 255));
-	PrimitiveDrawer::GetInstance()->DrawLine3d(Vector3(0, 0, 5), Vector3(5, 0, 5), Vector4(255, 0, 0, 255));
-	PrimitiveDrawer::GetInstance()->DrawLine3d(Vector3(5, 0, 5), Vector3(5, 5, 5), Vector4(255, 0, 0, 255));
-	PrimitiveDrawer::GetInstance()->DrawLine3d(Vector3(5, 5, 5), Vector3(0, 5, 5), Vector4(255, 0, 0, 255));
-
-	PrimitiveDrawer::GetInstance()->DrawLine3d(Vector3(0, 0, 0), Vector3(0, 0, 5), Vector4(255, 0, 0, 255));
-	PrimitiveDrawer::GetInstance()->DrawLine3d(Vector3(5, 0, 0), Vector3(5, 0, 5), Vector4(255, 0, 0, 255));
-	PrimitiveDrawer::GetInstance()->DrawLine3d(Vector3(5, 5, 0), Vector3(5, 5, 5), Vector4(255, 0, 0, 255));
-	PrimitiveDrawer::GetInstance()->DrawLine3d(Vector3(0, 5, 0), Vector3(0, 5, 5), Vector4(255, 0, 0, 255));*/
+	
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
