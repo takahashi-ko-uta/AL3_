@@ -44,7 +44,7 @@ class GameScene {
 	ViewProjection viewProjection_;
 	//デバックカメラ
 	DebugCamera* debugCamera_ = nullptr;
-	float ten_ori[8][4] = {
+	float ten_ori[8][4] = {//元の
 	  {0.0f, 0.0f, 0.0f, 1.0f},
       {5.0f, 0.0f, 0.0f, 1.0f},
       {5.0f, 0.0f, 5.0f, 1.0f},
@@ -54,10 +54,7 @@ class GameScene {
       {5.0f, 5.0f, 5.0f, 1.0f},
       {0.0f, 5.0f, 5.0f, 1.0f}
     };
-
-	float ten_1[8][4] = {};//移動
-	float ten_2[8][4] = {};//倍率
-	float ten_3[8][4] = {};//回転
+	float ten_h[8][4] = {}; //保存
 
 	Vector3 ten[8] = {
 	  {0.0f, 0.0f, 0.0f},
@@ -70,10 +67,13 @@ class GameScene {
       {0.0f, 5.0f, 5.0f}
     };
 
-
-
-
-	int hen2[12][2] = {
+	Vector3 ten_hoz[8] = {}; //保存用
+	Vector3 ten_move[8] = {};//移動
+	Vector3 ten_tmg[8] = {}; //倍率
+	Vector3 ten_rotX[8] = {}; //回転X
+	Vector3 ten_rotY[8] = {}; //回転Y
+	Vector3 ten_rotZ[8] = {}; //回転Z
+	int hen[12][2] = {
 	  {0, 1},
       {1, 2},
       {2, 3},
@@ -90,12 +90,6 @@ class GameScene {
       {3, 7},
 	};
 
-	/*float afin[3][3] = {
-	  {1.0f, 0.0f, 5.0f},
-	  {0.0f, 1.0f, 5.0f},
-	  {0.0f, 0.0f, 1.0f}
-    };*/
-
 	float afin_1[4][4] = {		//移動
 	  {1.0f, 0.0f, 0.0f, 5.0f},
 	  {0.0f, 1.0f, 0.0f, 5.0f},
@@ -108,9 +102,24 @@ class GameScene {
 	  {0.0f, 0.0f, 2.0f, 0.0f},
 	  {0.0f, 0.0f, 0.0f, 1.0f}
     };
-	float afin_3[4][4] = {		//回転
+
+
+
+	float afin_3[4][4] = {		//回転(X軸)
+	  {1.0f, 0.0f, 0.0f, 0.0f},
+	  {0.0f, (float)cos(PI / 4), (float)-sin(PI / 4), 0.0f},
+	  {0.0f, (float)sin(PI / 4), (float) cos(PI / 4), 0.0f},
+	  {0.0f, 0.0f, 0.0f, 1.0f}
+    };
+	float afin_4[4][4] = {		//回転(Y軸)
+	  {(float) cos(PI / 4), 0.0f, (float)sin(PI / 4), 0.0f},
+	  {0.0f, 1.0f, 0.0f, 0.0f},
+	  {(float)-sin(PI / 4), 0.0f, (float)cos(PI / 4), 0.0f},
+	  {0.0f, 0.0f, 0.0f, 1.0f}
+    };
+	float afin_5[4][4] = {		//回転(Z軸)
 	  {(float)cos(PI / 4), (float)-sin(PI / 4), 0.0f, 0.0f},
-	  {(float)sin(PI / 4), (float) cos(PI / 4),  0.0f, 0.0f},
+	  {(float)sin(PI / 4), (float) cos(PI / 4), 0.0f, 0.0f},
 	  {0.0f, 0.0f, 1.0f, 0.0f},
 	  {0.0f, 0.0f, 0.0f, 1.0f}
     };
