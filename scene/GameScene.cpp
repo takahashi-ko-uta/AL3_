@@ -150,7 +150,7 @@ void GameScene::Draw() {
 		PrimitiveDrawer::GetInstance()->DrawLine3d(ten_move[hen[i][0]], ten_move[hen[i][1]], Vector4(255, 0, 0, 255));
 		PrimitiveDrawer::GetInstance()->DrawLine3d(ten_tmg[hen[i][0]], ten_tmg[hen[i][1]], Vector4(0, 255, 0, 255));
 		PrimitiveDrawer::GetInstance()->DrawLine3d(ten_rotX[hen[i][0]], ten_rotX[hen[i][1]], Vector4(0, 0, 255, 255));
-		PrimitiveDrawer::GetInstance()->DrawLine3d(ten_rotY[hen[i][0]], ten_rotY[hen[i][1]], Vector4(0, 255, 255, 255));
+		PrimitiveDrawer::GetInstance()->DrawLine3d(ten_rotY[hen[i][0]], ten_rotY[hen[i][1]], Vector4(255, 255, 0, 255));
 		PrimitiveDrawer::GetInstance()->DrawLine3d(ten_rotZ[hen[i][0]], ten_rotZ[hen[i][1]], Vector4(255, 0, 255, 255));
 	}
 	//PrimitiveDrawer::GetInstance()->DrawLine3d(ten[i % 4], ten[(i + 1) % 4], Vector4(0, 70, 0, 255));			//1^4 
