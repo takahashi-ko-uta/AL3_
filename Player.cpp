@@ -20,19 +20,24 @@ void Player::InitiaLize(Model* model, uint32_t textreHandle) {
 
 void Player::Update() 
 { 
+#pragma region プレイヤーの移動
 	//キャラクターの移動ベクトル
 	Vector3 move = {0, 0, 0};
 	//キャラクター移動速度
 	const float playerSpeed = 0.2;
 	
 	//押した方向で移動ベクトルを変更
-	if (input_->PushKey(DIK_LEFT)) 
-	{
+	if (input_->PushKey(DIK_LEFT)) {
 		move = {-playerSpeed, 0, 0};
 	} 
-	else if (input_->PushKey(DIK_RIGHT)) 
-	{
+	else if (input_->PushKey(DIK_RIGHT)) {
 		move = {playerSpeed, 0, 0};
+	} 
+	else if (input_->PushKey(DIK_UP)) {
+		move = {0, -playerSpeed, 0};
+	} 
+	else if (input_->PushKey(DIK_DOWN)) {
+		move = {0, playerSpeed, 0};
 	}
 	//注視点移動(ベクトル加算)
 	worldTransform_.translation_.x += move.x;
@@ -47,6 +52,8 @@ void Player::Update()
 		worldTransform_.translation_.x,
 		worldTransform_.translation_.y,
 	    worldTransform_.translation_.z);
+
+#pragma endregion
 }
 
 void Player::Draw(ViewProjection viewProjection_) {
