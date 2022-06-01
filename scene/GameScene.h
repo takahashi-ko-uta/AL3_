@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "Player.h"
 
 #include "Audio.h"
 #include "DirectXCommon.h"
@@ -31,12 +32,14 @@ class GameScene {
 	/// 初期化
 	/// </summary>
 	void Initialize();
+	//自キャラ
+	Player* player_ = nullptr;
+
 	//テクスチャハンドル
 	uint32_t textureHandle_ = 0;
 	//3Dモデル
 	Model* model_ = nullptr;
-	//ワールドトランスフォームビュープロジェクション
-	WorldTransform worldTransform_;
+	
 	//ビュープロジェクション
 	ViewProjection viewProjection_;
 	//デバックカメラ
