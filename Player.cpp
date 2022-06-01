@@ -5,13 +5,13 @@
 #include "AxisIndicator.h"
 #include <random>
 
-void Player::InitiaLize(Model* model, uint32_t textreHandle) {
+void Player::InitiaLize(Model* model, uint32_t textureHandle) {
 	//NULLポインタチェック
 	assert(model);
 
 	//引数として受け取ってデータをメンバ変数に記憶する
 	model_ = model;
-	textureHandle_ = textreHandle;
+	textureHandle_ = textureHandle;
 	//シングルトンインスタンスを取得する
 	input_ = Input::GetInstance();
 	debugText_ = DebugText::GetInstance();
@@ -24,7 +24,7 @@ void Player::Update()
 	//キャラクターの移動ベクトル
 	Vector3 move = {0, 0, 0};
 	//キャラクター移動速度
-	const float playerSpeed = 0.2;
+	const float playerSpeed = 0.2f;
 	
 	//押した方向で移動ベクトルを変更
 	if (input_->PushKey(DIK_LEFT)) {
@@ -46,6 +46,7 @@ void Player::Update()
 
 	worldTransform_.TransferMatrix();
 
+	//デバック
 	debugText_->SetPos(50, 150);
 	debugText_->Printf(
 	  "Root:(%f,%f,%f)",
@@ -57,5 +58,6 @@ void Player::Update()
 }
 
 void Player::Draw(ViewProjection viewProjection_) {
+
 	model_->Draw(worldTransform_, viewProjection_, textureHandle_);
 }

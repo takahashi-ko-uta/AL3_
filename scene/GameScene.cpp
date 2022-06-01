@@ -26,11 +26,11 @@ void GameScene::Initialize() {
 	//ビュープロジェクションの初期化
 	viewProjection_.Initialize();
 	//デバックカメラの生成
-	debugCamera_ = new DebugCamera(600, 600);
+	//debugCamera_ = new DebugCamera(600, 600);
 	//軸方向表示の表示を有効にする
-	AxisIndicator::GetInstance()->SetVisible(true);
+	//AxisIndicator::GetInstance()->SetVisible(true);
 	//軸方向は参照するビュープロジェクションを指定する
-	AxisIndicator::GetInstance()->SetTargetViewProjection(&debugCamera_->GetViewProjection());
+	//AxisIndicator::GetInstance()->SetTargetViewProjection(&debugCamera_->GetViewProjection());
 	//ライン描画が参照するビュープロジェクションを指定する(アドレス渡し)
 	PrimitiveDrawer::GetInstance()->SetViewProjection(&debugCamera_->GetViewProjection());
 	float hen[12][2];
@@ -45,7 +45,7 @@ void GameScene::Initialize() {
 void GameScene::Update() 
 {
 	//デバックカメラの更新
-	debugCamera_->Update();
+	//debugCamera_->Update();
 	//自キャラの更新
 	player_->Update();
 }
@@ -88,6 +88,8 @@ void GameScene::Draw() {
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
+
+
 #pragma endregion
 
 #pragma region 前景スプライト描画
