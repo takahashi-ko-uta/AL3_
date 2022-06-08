@@ -44,14 +44,17 @@ class GameScene {
 	ViewProjection viewProjection_;
 	//デバックカメラ
 	DebugCamera* debugCamera_ = nullptr;
-	float ten_ori[8][4] = {//元の
+
+#pragma region アフィン変換
+	float ten_ori[8][4] = {
+  //元の
 	  {0.0f, 0.0f, 0.0f, 1.0f},
       {5.0f, 0.0f, 0.0f, 1.0f},
       {5.0f, 0.0f, 5.0f, 1.0f},
 	  {0.0f, 0.0f, 5.0f, 1.0f},
       {0.0f, 5.0f, 0.0f, 1.0f},
       {5.0f, 5.0f, 0.0f, 1.0f},
-      {5.0f, 5.0f, 5.0f, 1.0f},
+	  {5.0f, 5.0f, 5.0f, 1.0f},
       {0.0f, 5.0f, 5.0f, 1.0f}
     };
 	float ten_h[8][4] = {}; //保存
@@ -67,9 +70,9 @@ class GameScene {
       {0.0f, 5.0f, 5.0f}
     };
 
-	Vector3 ten_hoz[8] = {}; //保存用
-	Vector3 ten_move[8] = {};//移動
-	Vector3 ten_tmg[8] = {}; //倍率
+	Vector3 ten_hoz[8] = {};  //保存用
+	Vector3 ten_move[8] = {}; //移動
+	Vector3 ten_tmg[8] = {};  //倍率
 	Vector3 ten_rotX[8] = {}; //回転X
 	Vector3 ten_rotY[8] = {}; //回転Y
 	Vector3 ten_rotZ[8] = {}; //回転Z
@@ -90,39 +93,45 @@ class GameScene {
       {3, 7},
 	};
 
-	float afin_1[4][4] = {		//移動
+	float afin_1[4][4] = {
+  //移動
 	  {1.0f, 0.0f, 0.0f, 5.0f},
 	  {0.0f, 1.0f, 0.0f, 5.0f},
 	  {0.0f, 0.0f, 1.0f, 0.0f},
 	  {0.0f, 0.0f, 0.0f, 1.0f}
     };
-	float afin_2[4][4] = {		//倍率
+	float afin_2[4][4] = {
+  //倍率
 	  {2.0f, 0.0f, 0.0f, 0.0f},
 	  {0.0f, 2.0f, 0.0f, 0.0f},
 	  {0.0f, 0.0f, 2.0f, 0.0f},
 	  {0.0f, 0.0f, 0.0f, 1.0f}
     };
 
-
-
-	float afin_3[4][4] = {		//回転(X軸)
-	  {1.0f, 0.0f, 0.0f, 0.0f},
+	float afin_3[4][4] = {
+  //回転(X軸)
+	  {1.0f, 0.0f,               0.0f,                0.0f},
 	  {0.0f, (float)cos(PI / 4), (float)-sin(PI / 4), 0.0f},
-	  {0.0f, (float)sin(PI / 4), (float) cos(PI / 4), 0.0f},
-	  {0.0f, 0.0f, 0.0f, 1.0f}
+	  {0.0f, (float)sin(PI / 4), (float)cos(PI / 4),  0.0f},
+	  {0.0f, 0.0f,               0.0f,                1.0f}
     };
-	float afin_4[4][4] = {		//回転(Y軸)
-	  {(float) cos(PI / 4), 0.0f, (float)sin(PI / 4), 0.0f},
-	  {0.0f, 1.0f, 0.0f, 0.0f},
+	float afin_4[4][4] = {
+  //回転(Y軸)
+	  {(float)cos(PI / 4),  0.0f, (float)sin(PI / 4), 0.0f},
+	  {0.0f,                1.0f, 0.0f,               0.0f},
 	  {(float)-sin(PI / 4), 0.0f, (float)cos(PI / 4), 0.0f},
-	  {0.0f, 0.0f, 0.0f, 1.0f}
+	  {0.0f,                0.0f, 0.0f,               1.0f}
     };
-	float afin_5[4][4] = {		//回転(Z軸)
+	float afin_5[4][4] = {
+  //回転(Z軸)
 	  {(float)cos(PI / 4), (float)-sin(PI / 4), 0.0f, 0.0f},
-	  {(float)sin(PI / 4), (float) cos(PI / 4), 0.0f, 0.0f},
-	  {0.0f, 0.0f, 1.0f, 0.0f},
-	  {0.0f, 0.0f, 0.0f, 1.0f}
+	  {(float)sin(PI / 4), (float)cos(PI / 4),  0.0f, 0.0f},
+	  {0.0f,               0.0f,                1.0f, 0.0f},
+	  {0.0f,               0.0f,                0.0f, 1.0f}
     };
+#pragma endregion
+	
+
 	/// <summary>
 	/// 毎フレーム処理
 	/// </summary>
