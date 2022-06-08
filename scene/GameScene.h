@@ -12,6 +12,8 @@
 #include "DebugCamera.h"
 #include <math.h>
 
+#include "Object.h"
+
 #define PI 3.141592
 
 /// <summary>
@@ -44,7 +46,6 @@ class GameScene {
 	ViewProjection viewProjection_;
 	//デバックカメラ
 	DebugCamera* debugCamera_ = nullptr;
-
 #pragma region アフィン変換
 	float ten_ori[8][4] = {
   //元の
