@@ -12,7 +12,7 @@
 #include "DebugCamera.h"
 #include <math.h>
 
-#include "Object.h"
+#include "affinTransformation.h"
 
 #define PI 3.141592
 

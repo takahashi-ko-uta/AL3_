@@ -1,10 +1,10 @@
-#include "Object.h"
+#include "affinTransformation.h"
 #include "MathUtility.h"
 #include <math.h>
 
 #define PI 3.141592
-namespace myApp 
-{
+
+namespace affinTransformation {
 void Scale(WorldTransform worldTransform_, float sx, float sy, float sz) {//スケーリング
 
 	// X,Y,Z方向のスケーリング
@@ -39,20 +39,20 @@ void Rot(WorldTransform worldTransform_, float rx, float ry, float rz) {//回転
 	matRotX = MathUtility ::Matrix4Identity();
 	matRotY = MathUtility ::Matrix4Identity();
 	// Z軸回転の各要素
-	matRotZ.m[0][0] = cos(worldTransform_.rotation_.z);
-	matRotZ.m[0][1] = sin(worldTransform_.rotation_.z);
-	matRotZ.m[1][0] = -sin(worldTransform_.rotation_.z);
-	matRotZ.m[1][1] = cos(worldTransform_.rotation_.z);
+	matRotZ.m[0][0] = (float)cos(worldTransform_.rotation_.z);
+	matRotZ.m[0][1] = (float)sin(worldTransform_.rotation_.z);
+	matRotZ.m[1][0] = (float)-sin(worldTransform_.rotation_.z);
+	matRotZ.m[1][1] = (float)cos(worldTransform_.rotation_.z);
 	// X軸回転の各要素
-	matRotX.m[1][1] = cos(worldTransform_.rotation_.x);
-	matRotX.m[1][2] = sin(worldTransform_.rotation_.x);
-	matRotX.m[2][1] = -sin(worldTransform_.rotation_.x);
-	matRotX.m[2][2] = cos(worldTransform_.rotation_.x);
+	matRotX.m[1][1] = (float)cos(worldTransform_.rotation_.x);
+	matRotX.m[1][2] = (float)sin(worldTransform_.rotation_.x);
+	matRotX.m[2][1] = (float)-sin(worldTransform_.rotation_.x);
+	matRotX.m[2][2] = (float)cos(worldTransform_.rotation_.x);
 	// Y軸回転の各要素
-	matRotY.m[0][0] = cos(worldTransform_.rotation_.y);
-	matRotY.m[0][2] = -sin(worldTransform_.rotation_.y);
-	matRotY.m[2][0] = sin(worldTransform_.rotation_.y);
-	matRotY.m[2][2] = cos(worldTransform_.rotation_.y);
+	matRotY.m[0][0] = (float)cos(worldTransform_.rotation_.y);
+	matRotY.m[0][2] = (float)-sin(worldTransform_.rotation_.y);
+	matRotY.m[2][0] = (float)sin(worldTransform_.rotation_.y);
+	matRotY.m[2][2] = (float)cos(worldTransform_.rotation_.y);
 
 	//各軸用回転行列を宣言
 	matRot *= matRotZ *= matRotX *= matRotY;
@@ -63,7 +63,7 @@ void Rot(WorldTransform worldTransform_, float rx, float ry, float rz) {//回転
 	//行列の転送
 	worldTransform_.TransferMatrix();
 }
-void Trans(WorldTransform worldTransform_, float tx, float ty, float tz) {//移動
+void Translate(WorldTransform worldTransform_, float tx, float ty, float tz) {//移動
 
 	// X,Y,Z方向の平行移動
 	worldTransform_.translation_ = {tx, ty, tz};
@@ -111,20 +111,20 @@ void Transform(																//上の全て
 	matScale.m[1][1] = worldTransform_.scale_.y;
 	matScale.m[2][2] = worldTransform_.scale_.z;
 	// Z軸回転の各要素
-	matRotZ.m[0][0] = cos(worldTransform_.rotation_.z);
-	matRotZ.m[0][1] = sin(worldTransform_.rotation_.z);
-	matRotZ.m[1][0] = -sin(worldTransform_.rotation_.z);
-	matRotZ.m[1][1] = cos(worldTransform_.rotation_.z);
+	matRotZ.m[0][0] = (float)cos(worldTransform_.rotation_.z);
+	matRotZ.m[0][1] = (float)sin(worldTransform_.rotation_.z);
+	matRotZ.m[1][0] = (float)-sin(worldTransform_.rotation_.z);
+	matRotZ.m[1][1] = (float)cos(worldTransform_.rotation_.z);
 	// X軸回転の各要素
-	matRotX.m[1][1] = cos(worldTransform_.rotation_.x);
-	matRotX.m[1][2] = sin(worldTransform_.rotation_.x);
-	matRotX.m[2][1] = -sin(worldTransform_.rotation_.x);
-	matRotX.m[2][2] = cos(worldTransform_.rotation_.x);
+	matRotX.m[1][1] = (float)cos(worldTransform_.rotation_.x);
+	matRotX.m[1][2] = (float)sin(worldTransform_.rotation_.x);
+	matRotX.m[2][1] = (float)-sin(worldTransform_.rotation_.x);
+	matRotX.m[2][2] = (float)cos(worldTransform_.rotation_.x);
 	// Y軸回転の各要素
-	matRotY.m[0][0] = cos(worldTransform_.rotation_.y);
-	matRotY.m[0][2] = -sin(worldTransform_.rotation_.y);
-	matRotY.m[2][0] = sin(worldTransform_.rotation_.y);
-	matRotY.m[2][2] = cos(worldTransform_.rotation_.y);
+	matRotY.m[0][0] = (float)cos(worldTransform_.rotation_.y);
+	matRotY.m[0][2] = (float)-sin(worldTransform_.rotation_.y);
+	matRotY.m[2][0] = (float)sin(worldTransform_.rotation_.y);
+	matRotY.m[2][2] = (float)cos(worldTransform_.rotation_.y);
 	//平行移動
 	matTrans.m[3][0] += worldTransform_.translation_.x;
 	matTrans.m[3][1] += worldTransform_.translation_.y;

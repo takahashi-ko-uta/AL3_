@@ -5,7 +5,7 @@
 #include "AxisIndicator.h"
 #include "MathUtility.h"
 
-#include "Object.h"
+#include "affinTransformation.h"
 
 GameScene::GameScene() {}
 
@@ -37,9 +37,7 @@ void GameScene::Initialize() {
 	AxisIndicator::GetInstance()->SetTargetViewProjection(&debugCamera_->GetViewProjection());
 	//ライン描画が参照するビュープロジェクションを指定する(アドレス渡し)
 	PrimitiveDrawer::GetInstance()->SetViewProjection(&debugCamera_->GetViewProjection());
-	float hen[12][2];
-	float ten_1[8][4];
-
+	
 	Vector3 ten_move[8];
 	
 #pragma region スケーリング
@@ -253,13 +251,10 @@ void GameScene::Initialize() {
 	 //worldTransform_.TransferMatrix();
 #pragma endregion
 
-myApp::Transform(worldTransform_,
-	5, 5, 5,
-	PI / 4, PI / 4, 0, 
-	10, 10, 10);
-}
 
-void GameScene::Update() 
+affinTransformation::Transform(worldTransform_, 5.0f, 5.0f, 5.0f, PI / 4, PI / 4, 0.0f, 10.0f, 10.0f, 10.0f);
+}
+void GameScene::Update()
 {
 	//デバックカメラの更新
 	debugCamera_->Update();
