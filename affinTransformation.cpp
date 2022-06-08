@@ -63,6 +63,7 @@ void Translate(WorldTransform &worldTransform_) {//移動
 
 	//平行移動行列を宣言
 	Matrix4 matTrans;
+
 	//平行移動を行列を宣言
 	matTrans = MathUtility ::Matrix4Identity();
 
