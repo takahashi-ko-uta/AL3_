@@ -39,7 +39,12 @@ void GameScene::Initialize() {
 	PrimitiveDrawer::GetInstance()->SetViewProjection(&debugCamera_->GetViewProjection());
 	
 	Vector3 ten_move[8];
-	
+	// X,Y,Z方向のスケーリング
+	worldTransform_.scale_ = {5, 5, 5};
+	// X,Y,Z方向の回転
+	worldTransform_.rotation_ = {PI/4, PI/4, 0.0f};
+	// X,Y,Z方向の平行移動
+	worldTransform_.translation_ = {10.0f, 10.0f, 10.0f};
 #pragma region スケーリング
 	//// X,Y,Z方向のスケーリング
 	//worldTransform_.scale_ = {1.0f, 1.0f, 1.0f};
@@ -252,7 +257,9 @@ void GameScene::Initialize() {
 #pragma endregion
 
 
-affinTransformation::Transform(worldTransform_, 5.0f, 5.0f, 5.0f, PI / 4, PI / 4, 0.0f, 10.0f, 10.0f, 10.0f);
+	affinTransformation::Transfer(worldTransform_);
+	//行列の転送
+	worldTransform_.TransferMatrix();
 }
 void GameScene::Update()
 {

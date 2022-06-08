@@ -5,10 +5,9 @@
 #define PI 3.141592
 
 namespace affinTransformation {
-void Scale(WorldTransform worldTransform_, float sx, float sy, float sz) {//スケーリング
+void Scale(WorldTransform &worldTransform_ ) {//スケーリング
 
-	// X,Y,Z方向のスケーリング
-	worldTransform_.scale_ = {sx, sy, sz};
+	
 	//スケーリング行列を宣言
 	Matrix4 matScale;
 	//スケーリング倍率を行列を宣言
@@ -22,13 +21,10 @@ void Scale(WorldTransform worldTransform_, float sx, float sy, float sz) {//スケ
 	worldTransform_.matWorld_ = MathUtility ::Matrix4Identity();
 	worldTransform_.matWorld_ *= matScale;
 
-	//行列の転送
-	worldTransform_.TransferMatrix();
+	
 }
-void Rot(WorldTransform worldTransform_, float rx, float ry, float rz) {//回転
+void Rotate(WorldTransform &worldTransform_) {//回転
 
-	// X,Y,Z方向の回転
-	worldTransform_.rotation_ = {rx, ry, rz};
 	//回転行列を宣言
 	Matrix4 matRot;
 	Matrix4 matRotX, matRotY, matRotZ;
@@ -63,10 +59,8 @@ void Rot(WorldTransform worldTransform_, float rx, float ry, float rz) {//回転
 	//行列の転送
 	worldTransform_.TransferMatrix();
 }
-void Translate(WorldTransform worldTransform_, float tx, float ty, float tz) {//移動
+void Translate(WorldTransform &worldTransform_) {//移動
 
-	// X,Y,Z方向の平行移動
-	worldTransform_.translation_ = {tx, ty, tz};
 	//平行移動行列を宣言
 	Matrix4 matTrans;
 	//平行移動を行列を宣言
@@ -78,18 +72,10 @@ void Translate(WorldTransform worldTransform_, float tx, float ty, float tz) {//
 
 	worldTransform_.matWorld_ = MathUtility ::Matrix4Identity();
 	worldTransform_.matWorld_ *= matTrans;
-	//行列の転送
-	worldTransform_.TransferMatrix();
 }
 
-void Transform(																//上の全て
-  WorldTransform worldTransform_, float sx, float sy, float sz, float rx, float ry, float rz,float tx, float ty, float tz) {
-	// X,Y,Z方向のスケーリング
-	worldTransform_.scale_ = {sx, sy, sz};
-	// X,Y,Z方向の回転
-	worldTransform_.rotation_ = {rx, ry, rz};
-	// X,Y,Z方向の平行移動
-	worldTransform_.translation_ = {tx, ty, tz};
+void Transfer(																//上の全て
+  WorldTransform &worldTransform_) {
 
 	//スケーリング行列を宣言
 	Matrix4 matScale;
@@ -136,8 +122,6 @@ void Transform(																//上の全て
 	worldTransform_.matWorld_ = MathUtility ::Matrix4Identity();
 	worldTransform_.matWorld_ = matScale *= matRot *= matTrans;
 
-	//行列の転送
-	worldTransform_.TransferMatrix();
 }
 }
 
