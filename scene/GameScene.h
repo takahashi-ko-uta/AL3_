@@ -41,11 +41,13 @@ class GameScene {
 	//3Dモデル
 	Model* model_ = nullptr;
 	//ワールドトランスフォームビュープロジェクション
-	WorldTransform worldTransform_;
+	WorldTransform worldTransforms_[100];
 	//ビュープロジェクション
 	ViewProjection viewProjection_;
 	//デバックカメラ
 	DebugCamera* debugCamera_ = nullptr;
+	//カメラ上方向の角度
+	float viewAngle = 0.0f;
 #pragma region アフィン変換
 	float ten_ori[8][4] = {
   //元の
