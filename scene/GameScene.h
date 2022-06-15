@@ -42,98 +42,29 @@ class GameScene {
 	//3Dモデル
 	Model* model_ = nullptr;
 	//ワールドトランスフォームビュープロジェクション
-	WorldTransform worldTransforms_[100];
+	WorldTransform worldTransforms_[9];
 	//ビュープロジェクション
 	ViewProjection viewProjection_;
 	//デバックカメラ
 	DebugCamera* debugCamera_ = nullptr;
 	//カメラ上方向の角度
 	float viewAngle = 0.0f;
-#pragma region アフィン変換
-	float ten_ori[8][4] = {
-  //元の
-	  {0.0f, 0.0f, 0.0f, 1.0f},
-      {5.0f, 0.0f, 0.0f, 1.0f},
-      {5.0f, 0.0f, 5.0f, 1.0f},
-	  {0.0f, 0.0f, 5.0f, 1.0f},
-      {0.0f, 5.0f, 0.0f, 1.0f},
-      {5.0f, 5.0f, 0.0f, 1.0f},
-	  {5.0f, 5.0f, 5.0f, 1.0f},
-      {0.0f, 5.0f, 5.0f, 1.0f}
-    };
-	float ten_h[8][4] = {}; //保存
 
-	Vector3 ten[8] = {
-	  {0.0f, 0.0f, 0.0f},
-      {5.0f, 0.0f, 0.0f},
-      {5.0f, 0.0f, 5.0f},
-      {0.0f, 0.0f, 5.0f},
-	  {0.0f, 5.0f, 0.0f},
-      {5.0f, 5.0f, 0.0f},
-      {5.0f, 5.0f, 5.0f},
-      {0.0f, 5.0f, 5.0f}
-    };
+	public:
+		//パーツID
+	  enum PartID {
+		  kRoot,	//大元
+		  kSpine,	//脊髄
+		  kChest,	//胸
+		  kHead,	//頭
+		  kArmL,	//左腕
+		  kArmR,	//右腕
+		  kHip,		//尻
+		  kLegL,	//左足
+		  kLegR,	//右足
 
-	Vector3 ten_hoz[8] = {};  //保存用
-	Vector3 ten_move[8] = {}; //移動
-	Vector3 ten_tmg[8] = {};  //倍率
-	Vector3 ten_rotX[8] = {}; //回転X
-	Vector3 ten_rotY[8] = {}; //回転Y
-	Vector3 ten_rotZ[8] = {}; //回転Z
-	int hen[12][2] = {
-	  {0, 1},
-      {1, 2},
-      {2, 3},
-      {3, 0},
-
-	  {4, 5},
-      {5, 6},
-      {6, 7},
-      {7, 4},
-
-	  {0, 4},
-      {1, 5},
-      {2, 6},
-      {3, 7},
-	};
-
-	float afin_1[4][4] = {
-  //移動
-	  {1.0f, 0.0f, 0.0f, 5.0f},
-	  {0.0f, 1.0f, 0.0f, 5.0f},
-	  {0.0f, 0.0f, 1.0f, 0.0f},
-	  {0.0f, 0.0f, 0.0f, 1.0f}
-    };
-	float afin_2[4][4] = {
-  //倍率
-	  {2.0f, 0.0f, 0.0f, 0.0f},
-	  {0.0f, 2.0f, 0.0f, 0.0f},
-	  {0.0f, 0.0f, 2.0f, 0.0f},
-	  {0.0f, 0.0f, 0.0f, 1.0f}
-    };
-
-	float afin_3[4][4] = {
-  //回転(X軸)
-	  {1.0f, 0.0f,               0.0f,                0.0f},
-	  {0.0f, (float)cos(PI / 4), (float)-sin(PI / 4), 0.0f},
-	  {0.0f, (float)sin(PI / 4), (float)cos(PI / 4),  0.0f},
-	  {0.0f, 0.0f,               0.0f,                1.0f}
-    };
-	float afin_4[4][4] = {
-  //回転(Y軸)
-	  {(float)cos(PI / 4),  0.0f, (float)sin(PI / 4), 0.0f},
-	  {0.0f,                1.0f, 0.0f,               0.0f},
-	  {(float)-sin(PI / 4), 0.0f, (float)cos(PI / 4), 0.0f},
-	  {0.0f,                0.0f, 0.0f,               1.0f}
-    };
-	float afin_5[4][4] = {
-  //回転(Z軸)
-	  {(float)cos(PI / 4), (float)-sin(PI / 4), 0.0f, 0.0f},
-	  {(float)sin(PI / 4), (float)cos(PI / 4),  0.0f, 0.0f},
-	  {0.0f,               0.0f,                1.0f, 0.0f},
-	  {0.0f,               0.0f,                0.0f, 1.0f}
-    };
-#pragma endregion
+		  kNumPartId
+	  };
 	
 
 	/// <summary>
