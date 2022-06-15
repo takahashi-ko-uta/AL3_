@@ -78,6 +78,7 @@ void GameScene::Initialize() {
 	worldTransforms_[PartID::kLegR].parent_ = &worldTransforms_[PartID::kHip];
 	worldTransforms_[PartID::kLegR].translation_ = {2.5f, -2.5f, 0};
 
+
 	//カメラ垂直方向視野角を設定
 	//viewProjection_.fovAngleY = 10 * PI / 180;
 	//アスペクト比を設定
@@ -122,9 +123,10 @@ void GameScene::Update() {
 	//行列の再計算
 	viewProjection_.UpdateMatrix();
 
+
 	//デバック
-	debugText_->SetPos(50, 110);
-	debugText_->Printf("fovAngleY(Degree):%f", viewProjection_.fovAngleY * 180 / PI);
+	//debugText_->SetPos(50, 110);
+	//debugText_->Printf("fovAngleY(Degree):%f", viewProjection_.fovAngleY * 180 / PI);
 
 	
 
@@ -145,17 +147,16 @@ void GameScene::Update() {
 	worldTransforms_[PartID::kRoot].TransferMatrix();
 
 	//デバック
-	debugText_->SetPos(50, 130);
+	/*debugText_->SetPos(50, 130);
 	debugText_->Printf(
 	  "worldTransform_[PartID::kChest].rotation:%f,%f,%f",
 		worldTransforms_[PartID::kChest].rotation_.x,
 		worldTransforms_[PartID::kChest].rotation_.y,
-		worldTransforms_[PartID::kChest].rotation_.z);
+		worldTransforms_[PartID::kChest].rotation_.z);*/
 
 	
 	
 #pragma endregion
-
 	
 #pragma region 子の更新
 	for (int i = 1; i < kNumPartId; i++) {
