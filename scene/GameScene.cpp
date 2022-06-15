@@ -94,23 +94,23 @@ void GameScene::Update()
 
 	//Fov変更処理
 	{
-		//上キーで視野角が広がる
-		if (input_->PushKey(DIK_UP)) {
-			viewProjection_.fovAngleY += 0.01f;
-			viewProjection_.fovAngleY = min(viewProjection_.fovAngleY,PI);
-		}
+		////上キーで視野角が広がる
+		//if (input_->PushKey(DIK_UP)) {
+		//	viewProjection_.fovAngleY += 0.01f;
+		//	viewProjection_.fovAngleY = min(viewProjection_.fovAngleY,PI);
+		//}
 
-		//下キーで視野角が狭まる
-		else if (input_->PushKey(DIK_DOWN)) {
-			viewProjection_.fovAngleY -= 0.01f;
-			viewProjection_.fovAngleY = max(viewProjection_.fovAngleY, 0);
-		}
-		//行列の再計算
-		viewProjection_.UpdateMatrix();
+		////下キーで視野角が狭まる
+		//else if (input_->PushKey(DIK_DOWN)) {
+		//	viewProjection_.fovAngleY -= 0.01f;
+		//	viewProjection_.fovAngleY = max(viewProjection_.fovAngleY, 0);
+		//}
+		////行列の再計算
+		//viewProjection_.UpdateMatrix();
 
-		//デバック
-		debugText_->SetPos(50, 110);
-		debugText_->Printf("fovAngleY(Degree):%f", viewProjection_.fovAngleY * 180 / PI);
+		////デバック
+		//debugText_->SetPos(50, 110);
+		//debugText_->Printf("fovAngleY(Degree):%f", viewProjection_.fovAngleY * 180 / PI);
 	}
 	//クリップ距離変更処理
 	{
