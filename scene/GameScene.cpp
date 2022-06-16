@@ -14,6 +14,7 @@ GameScene::~GameScene()
 { 
 	delete model_;
 	delete debugCamera_;
+	delete player_;
 }
 
 void GameScene::Initialize() {
@@ -55,21 +56,7 @@ void GameScene::Initialize() {
 		//行列の転送
 		worldTransform.TransferMatrix();
 	}
-	//カメラ視点座標を指定
-	//viewProjection_.eye = {0,0,-10};
-	//カメラ注視点座標を設定
-	//viewProjection_.target = {10, 0, 0};
-	//カメラ上方向ベクトルを指定
-	//viewProjection_.up = {cosf(PI / 4.0f), cosf(PI / 4.0f), 0.0f};
 	
-	//カメラ垂直方向視野角を設定
-	viewProjection_.fovAngleY = 10 * PI / 180;
-	//アスペクト比を設定
-	viewProjection_.aspectRatio = 2.0f;
-	//ニアクリップ距離を設定
-	viewProjection_.nearZ = 52.0f;
-	//ファークリップ距離を設定
-	viewProjection_.farZ = 53.0f;
 
 	//ビュープロジェクションの初期化
 	viewProjection_.Initialize();
@@ -84,51 +71,19 @@ void GameScene::Initialize() {
 	PrimitiveDrawer::GetInstance()->SetViewProjection(&debugCamera_->GetViewProjection());
 	
 	Vector3 ten_move[8];
-	
+
+	//自キャラの生成
+	player_ = new Player();
+	//自キャラの初期化
+	player_->Initalize(model_,textureHandle_);
 }
 void GameScene::Update()
 {
 	//デバックカメラの更新
 	debugCamera_->Update();
 
-
-	//Fov変更処理
-	{
-		////上キーで視野角が広がる
-		//if (input_->PushKey(DIK_UP)) {
-		//	viewProjection_.fovAngleY += 0.01f;
-		//	viewProjection_.fovAngleY = min(viewProjection_.fovAngleY,PI);
-		//}
-
-		////下キーで視野角が狭まる
-		//else if (input_->PushKey(DIK_DOWN)) {
-		//	viewProjection_.fovAngleY -= 0.01f;
-		//	viewProjection_.fovAngleY = max(viewProjection_.fovAngleY, 0);
-		//}
-		////行列の再計算
-		//viewProjection_.UpdateMatrix();
-
-		////デバック
-		//debugText_->SetPos(50, 110);
-		//debugText_->Printf("fovAngleY(Degree):%f", viewProjection_.fovAngleY * 180 / PI);
-	}
-	//クリップ距離変更処理
-	{
-		//上下キーでニアクリップ距離を増減
-		if (input_->PushKey(DIK_UP)) {
-			viewProjection_.nearZ += 0.05f;
-		}
-		else if (input_->PushKey(DIK_DOWN)) {
-			viewProjection_.nearZ -= 0.05f;
-		}
-		//行列再計算
-		viewProjection_.UpdateMatrix();
-
-		//デバック
-		debugText_->SetPos(50, 130);
-		debugText_->Printf("nearZ:%f", viewProjection_.nearZ);
-
-	}
+	//自キャラの更新
+	player_->Update();
 }
 
 void GameScene::Draw() {
@@ -156,23 +111,19 @@ void GameScene::Draw() {
 	
 	// 3Dオブジェクト描画前処理
 	Model::PreDraw(commandList);
-	//モデルカメラを連動
-	/*for (WorldTransform& worldTransform : worldTransforms_) {
-		model_->Draw(worldTransform, debugCamera_->GetViewProjection(), textureHandle_);
-	}*/
 	
-	for (WorldTransform& worldTransform : worldTransforms_) {
-		model_->Draw(worldTransform,viewProjection_, textureHandle_);
-	}
+	
 
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
 	/// 
 	//3Dモデル描画
-	//model_->Draw(worldTransform_, viewProjection_, textureHandle_);
-	//ライン描画が参照するビュープロジェクションを指定する(アドレス渡し)
 	
+	//自キャラの描画
+	player_->Draw(viewProjection_);
+	//ライン描画が参照するビュープロジェクションを指定する(アドレス渡し)
+
 	
 
 	// 3Dオブジェクト描画後処理
