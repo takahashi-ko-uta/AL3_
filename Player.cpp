@@ -1,4 +1,4 @@
-#include"scene/player/Player.h"
+#include"player/Player.h"
 #include "TextureManager.h"
 #include <cassert>
 #include "PrimitiveDrawer.h"
