@@ -13,7 +13,7 @@
 #include <math.h>
 
 #include "affinTransformation.h"
-#include "Player.h"
+#include "scene/player/Player.h"
 
 #define PI 3.141592
 
