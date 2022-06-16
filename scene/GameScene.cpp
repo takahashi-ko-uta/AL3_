@@ -83,7 +83,7 @@ void GameScene::Update()
 	debugCamera_->Update();
 
 	//自キャラの更新
-	player_->Update();//
+	player_->Update();
 }
 
 void GameScene::Draw() {
