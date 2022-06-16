@@ -74,9 +74,7 @@ void Translate(WorldTransform &worldTransform_) {//移動
 	worldTransform_.matWorld_ = MathUtility ::Matrix4Identity();
 	worldTransform_.matWorld_ *= matTrans;
 }
-
-void Transfer(																//上の全て
-  WorldTransform &worldTransform_) {
+void Transfer(WorldTransform &worldTransform_) {
 
 	//スケーリング行列を宣言
 	Matrix4 matScale;
@@ -124,6 +122,15 @@ void Transfer(																//上の全て
 	worldTransform_.matWorld_ = matScale *= matRot *= matTrans;
 
 }
+void Par(WorldTransform& worldTransform_, int min,int max)
+{
+	for (int i = min; i <= max; i++) {
+		affinTransformation::Transfer(worldTransform_);
+		worldTransform_.matWorld_ *= worldTransform_.parent_->matWorld_;
+		worldTransform_.TransferMatrix();
+	}
+}
+
 }
 
 
