@@ -78,6 +78,9 @@
     <ClCompile Include="Player.cpp">
       <Filter>ソース ファイル\player</Filter>
     </ClCompile>
+    <ClCompile Include="playerBullet.cpp">
+      <Filter>ソース ファイル\player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3d\ViewProjection.h">
@@ -164,7 +167,10 @@
     <ClInclude Include="affinTransformation.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Player.h">
+    <ClInclude Include="player\Player.h">
+      <Filter>ヘッダー ファイル\player</Filter>
+    </ClInclude>
+    <ClInclude Include="playerBullet.h">
       <Filter>ヘッダー ファイル\player</Filter>
     </ClInclude>
   </ItemGroup>
