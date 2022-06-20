@@ -98,8 +98,8 @@
     <ClCompile Include="base\TextureManager.cpp" />
     <ClCompile Include="base\WinApp.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Player.cpp" />
-    <ClCompile Include="playerBullet.cpp" />
+    <ClCompile Include="player\Player.cpp" />
+    <ClCompile Include="player\playerBullet.cpp" />
     <ClCompile Include="scene\GameScene.cpp" />
     <ClCompile Include="affinTransformation.cpp" />
   </ItemGroup>
@@ -130,8 +130,8 @@
     <ClInclude Include="math\Vector2.h" />
     <ClInclude Include="math\Vector3.h" />
     <ClInclude Include="math\Vector4.h" />
-    <ClInclude Include="playerBullet.h" />
     <ClInclude Include="player\Player.h" />
+    <ClInclude Include="player\playerBullet.h" />
     <ClInclude Include="scene\GameScene.h" />
     <ClInclude Include="affinTransformation.h" />
   </ItemGroup>
