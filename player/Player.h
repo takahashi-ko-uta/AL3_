@@ -11,6 +11,8 @@
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 #include <math.h>
+#include <memory>
+#include <list>
 
 class Player {
   public:
@@ -38,6 +40,6 @@ class Player {
 	DebugText* debugText_ = nullptr;
 	WorldTransform worldTransforms_;
 	uint32_t textureHandle_ = 0;
-	//Åfe
-	PlayerBullet* bullet_ = nullptr;
+	//íe
+	std::list<std::unique_ptr<PlayerBullet>> bullets_;
 };

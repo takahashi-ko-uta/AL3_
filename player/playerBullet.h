@@ -14,7 +14,7 @@ class PlayerBullet {
 	/// <summary>
 	///更新
 	/// </summary>
-	void Update(WorldTransform worldTransform);
+	void Update();
 
 	/// <summary>
 	///更新

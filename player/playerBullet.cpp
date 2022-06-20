@@ -20,16 +20,9 @@ void PlayerBullet::Initialize(Model* model, const Vector3& position) {
 	worldTransform_.translation_ = {position.x,position.y,position.z};
 }
 
-void PlayerBullet::Update(WorldTransform worldTransform) {
-	//for (size_t i = 0; i < 9; i++) {
-	//	affinTransformation::Transfer(worldTransform_);
-	//	worldTransform_.matWorld_ *= worldTransform_.parent_->matWorld_;
-	//	worldTransform_.TransferMatrix();
-	//}
+void PlayerBullet::Update() {
 	affinTransformation::Transfer(worldTransform_);
-	//worldTransform_.matWorld_ *= worldTransform_.parent_->matWorld_;
 	worldTransform_.TransferMatrix();
-	// affinTransformation::Par(worldTransform_, 0, 1);
 }
 
 void PlayerBullet::Draw(const ViewProjection& viewProjection) {
