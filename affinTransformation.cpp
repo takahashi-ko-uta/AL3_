@@ -75,8 +75,8 @@ void Translate(WorldTransform &worldTransform_) {//移動
 	worldTransform_.matWorld_ *= matTrans;
 }
 
-void Transfer(																//上の全て
-  WorldTransform &worldTransform_) {
+void Transfer(WorldTransform& worldTransform_) { //上の全て
+  
 
 	//スケーリング行列を宣言
 	Matrix4 matScale;
@@ -124,6 +124,29 @@ void Transfer(																//上の全て
 	worldTransform_.matWorld_ = matScale *= matRot *= matTrans;
 
 }
+
+void VecMat(Vector3 vec3, WorldTransform& worldTransform_) 
+{
+	/*vec3.x = (vec3.x * worldTransform_.matWorld_.m[0][0]) +
+	         (vec3.y * worldTransform_.matWorld_.m[1][0]) +
+	         (vec3.z * worldTransform_.matWorld_.m[2][0]) + 
+			 (0 * worldTransform_.matWorld_.m[3][0]);
+
+	vec3.y = (vec3.x * worldTransform_.matWorld_.m[0][1]) +
+	         (vec3.y * worldTransform_.matWorld_.m[1][1]) +
+	         (vec3.z * worldTransform_.matWorld_.m[2][1]) + 
+			 (0 * worldTransform_.matWorld_.m[3][1]);
+
+	vec3.z = (vec3.x * worldTransform_.matWorld_.m[0][2]) +
+	         (vec3.y * worldTransform_.matWorld_.m[1][2]) +
+	         (vec3.z * worldTransform_.matWorld_.m[2][2]) + 
+			 (0 * worldTransform_.matWorld_.m[3][2]);*/
+
+	//vec3.x = 10;
+	
+	//return vec3;
+}
+
 }
 
 

@@ -7,7 +7,7 @@
 #include <cassert>
 #include <random>
 
-void PlayerBullet::Initialize(Model* model, const Vector3& position) {
+void PlayerBullet::Initialize(Model* model, const Vector3& position, const Vector3& velocity) {
 	// NULLポインタチェック
 	assert(model);
 
@@ -18,11 +18,21 @@ void PlayerBullet::Initialize(Model* model, const Vector3& position) {
 	worldTransform_.Initialize();
 	//引数で受け取った初期座標をセット
 	worldTransform_.translation_ = {position.x,position.y,position.z};
+
+	//引数で受け取った速度をメンバ変数に代入する
+	velocity_ = velocity;
 }
 
+
 void PlayerBullet::Update() {
+	worldTransform_.translation_ += velocity_;
 	affinTransformation::Transfer(worldTransform_);
 	worldTransform_.TransferMatrix();
+	//時間経過で消える
+	if (--deathTimer_ <= 0) {
+		isDead_ = true;
+	}
+
 }
 
 void PlayerBullet::Draw(const ViewProjection& viewProjection) {

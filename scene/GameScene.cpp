@@ -122,6 +122,9 @@ void GameScene::Draw() {
 	
 	//自キャラの描画
 	player_->Draw(viewProjection_);
+
+
+
 	//ライン描画が参照するビュープロジェクションを指定する(アドレス渡し)
 
 	
