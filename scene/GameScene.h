@@ -14,6 +14,7 @@
 
 #include "affinTransformation.h"
 #include "player/Player.h"
+#include "Enemy.h"
 
 #define PI 3.141592
 
@@ -55,6 +56,8 @@ class GameScene {
 	//自キャラ
 	Player* player_ = nullptr;
 	
+	//敵キャラ
+	Enemy* enemy_ = nullptr;
 
 	/// <summary>
 	/// 毎フレーム処理
