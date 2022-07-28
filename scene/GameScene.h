@@ -39,7 +39,9 @@ class GameScene {
 	/// </summary>
 	void Initialize();
 	//テクスチャハンドル
-	uint32_t textureHandle_ = 0;
+	uint32_t textureHandle_PL_ = 0;// 自機のテクスチャ
+	uint32_t textureHandle_EN_ = 0;// 敵のテクスチャ
+
 	//3Dモデル
 	Model* model_ = nullptr;
 	//ワールドトランスフォームビュープロジェクション

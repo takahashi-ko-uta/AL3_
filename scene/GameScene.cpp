@@ -25,7 +25,9 @@ void GameScene::Initialize() {
 	audio_ = Audio::GetInstance();
 	debugText_ = DebugText::GetInstance();
 	//ファイル名を指定してテクスチャを読み込む
-	textureHandle_ = TextureManager::Load("mario.jpg");
+	textureHandle_PL_ = TextureManager::Load("mario.jpg");
+	textureHandle_EN_ = TextureManager::Load("enemy.jpg");
+
 	//モデル生成
 	model_ = Model::Create();
 
@@ -76,12 +78,12 @@ void GameScene::Initialize() {
 	//自キャラの生成
 	player_ = new Player();
 	//自キャラの初期化
-	player_->Initalize(model_,textureHandle_);
+	player_->Initalize(model_,textureHandle_PL_);
 
 	//敵キャラの生成
 	enemy_ = new Enemy();
 	//敵キャラの初期化
-	enemy_->Initalize(model_, textureHandle_);
+	enemy_->Initalize(model_, textureHandle_EN_);
 }
 void GameScene::Update()
 {
