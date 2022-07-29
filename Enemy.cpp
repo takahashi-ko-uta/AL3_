@@ -21,39 +21,33 @@ void Enemy::Initalize(Model* model, uint32_t textureHandle)
 
 	//ワールド変換の初期化
 	worldTransforms_.Initialize();
+	worldTransforms_.translation_ = Vector3(0.0f, 5.0f, 20.0f);
 }
 
 void Enemy::Update() 
 {
 	Vector3 move = {0, 0, 0};
-	//移動ベクトルの変更する処理
-	/*if (input_->PushKey(DIK_W)) {
-		move.y += 0.5f;
-	} else if (input_->PushKey(DIK_S)) {
-		move.y -= 0.5f;
-	} else if (input_->PushKey(DIK_A)) {
-		move.x -= 0.5f;
-	} else if (input_->PushKey(DIK_D)) {
-		move.x += 0.5f;
-	}*/
 
-	move.z -= 0.2;
+	switch (phase_) {
+	case Phase::Approach:
+	default:
+		//移動
+		move = {0.0f,0.0f,-0.2f};
+		//既定の位置に到達したら離脱
+		if (worldTransforms_.translation_.z < 0.0f) 
+		{
+			phase_ = Phase::Leave;
+		}
+		break;
+	case Phase::Leave:
+		move = {-0.2f, 0.0f, -0.3f};
+		break;
+	}
 	//座標移動(ベクトル加算)
 	worldTransforms_.translation_ += move;
 	affinTransformation::Transfer(worldTransforms_);
 
-#pragma region 移動制限
-	//移動限界座標
-	const float kMoveLimitX = 35.0f;
-	const float kMoveLimitY = 20.0f;
 
-	//範囲を超えない処理
-	worldTransforms_.translation_.x = max(worldTransforms_.translation_.x, -kMoveLimitX);
-	worldTransforms_.translation_.x = min(worldTransforms_.translation_.x, +kMoveLimitX);
-	worldTransforms_.translation_.y = max(worldTransforms_.translation_.y, -kMoveLimitY);
-	worldTransforms_.translation_.y = min(worldTransforms_.translation_.y, +kMoveLimitY);
-
-#pragma endregion
 
 	//行列更新
 	worldTransforms_.TransferMatrix();

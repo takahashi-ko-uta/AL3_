@@ -14,6 +14,12 @@
 #include <list>
 
 
+//行動フェーズ
+enum class Phase {
+	Approach, //接近する
+	Leave,	  //離脱する
+};
+
 
 
 class Enemy {
@@ -33,6 +39,9 @@ class Enemy {
 	DebugText* debugText_ = nullptr;
 	WorldTransform worldTransforms_;
 	uint32_t textureHandle_ = 0;
+	//フェーズ
+	Phase phase_ = Phase::Approach;
+
 };
 
 //Enemy::Enemy() {}
