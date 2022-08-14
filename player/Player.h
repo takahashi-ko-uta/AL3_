@@ -29,6 +29,7 @@ class Player {
 	void Move();
 	void Rotate();
 	void Attack();
+	Vector3 GetWorldPosition();
 	/// <summary>
 	///
 	/// </summary>

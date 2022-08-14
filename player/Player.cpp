@@ -134,6 +134,18 @@ void Player::Attack() {
 	
 }
 
+Vector3 Player::GetWorldPosition() 
+{
+	//ワールド座標を入れる変数
+	Vector3 worldPos;
+	//ワールド行列の平行移動成分を取得
+	worldPos.x = worldTransforms_.translation_.x;
+	worldPos.y = worldTransforms_.translation_.y;
+	worldPos.z = worldTransforms_.translation_.z;
+
+	return worldPos;
+}
+
 void Player::Draw(ViewProjection& viewProjection) {
 	model_->Draw(worldTransforms_, viewProjection, textureHandle_);
 	//弾描画

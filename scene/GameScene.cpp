@@ -84,6 +84,10 @@ void GameScene::Initialize() {
 	enemy_ = new Enemy();
 	//敵キャラの初期化
 	enemy_->Initalize(model_, textureHandle_EN_);
+
+	//敵キャラに自キャラのアドレスを渡す
+	enemy_->SetPlayer(player_);
+
 }
 void GameScene::Update()
 {

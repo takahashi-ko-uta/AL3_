@@ -1,4 +1,5 @@
 #include "Enemy.h"
+#include "player/Player.h"
 #include "AxisIndicator.h"
 #include "MathUtility.h"
 #include "PrimitiveDrawer.h"
@@ -80,15 +81,25 @@ void Enemy::Move()
 }
 
 void Enemy::Attack() {
-	if (input_->PushKey(DIK_SPACE)) {
-		
-	}
+	assert(player_);
+
 	//弾の速度
 	const float kBulletSpeed = -1.0f;
-	Vector3 velocity(0, 0, kBulletSpeed);
-	//速度ベクトルを自機の向きに合わせて回転させる
-	// affinTransformation::VecMat(velocity, worldTransforms_);
 
+	Vector3 velocity(0, 0, kBulletSpeed);
+	Vector3 A = player_->GetWorldPosition();//自キャラのワールド座標を取得
+	Vector3 B = GetWorldPosition();			//敵キャラのワールド座標を取得
+	Vector3 C;								//敵キャラ→自キャラの差分ベクトルを求める
+	C.x = B.x - A.x; 
+	C.y = B.y - A.y;
+	C.z = B.z - A.z;
+	
+	//ベクトルの正規化
+	float norm = sqrt(C.x * C.x + C.y * C.y + C.z * C.z);
+	float mag = 1 / norm;
+	//ベクトルの長さを、速さに合わせる
+	
+	//速度ベクトルを自機の向きに合わせて回転させる
 	velocity.x = (velocity.x * worldTransforms_.matWorld_.m[0][0]) +
 	             (velocity.y * worldTransforms_.matWorld_.m[1][0]) +
 	             (velocity.z * worldTransforms_.matWorld_.m[2][0]) +
@@ -117,8 +128,17 @@ void Enemy::Attack() {
 
 }
 
+Vector3 Enemy::GetWorldPosition() 
+{
+	//ワールド座標を入れる変数
+	Vector3 worldPos;
+	//ワールド行列の平行移動成分を取得
+	worldPos.x = worldTransforms_.translation_.x;
+	worldPos.y = worldTransforms_.translation_.y;
+	worldPos.z = worldTransforms_.translation_.z;
 
-
+	return worldPos;
+}
 
 void Enemy::Draw(ViewProjection& viewProjection) 
 {
@@ -128,8 +148,6 @@ void Enemy::Draw(ViewProjection& viewProjection)
 		bullet->Draw(viewProjection);
 	}
 }
-
-
 
 
 

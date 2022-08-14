@@ -81,10 +81,10 @@
     <ClCompile Include="player\playerBullet.cpp">
       <Filter>ソース ファイル\player</Filter>
     </ClCompile>
-    <ClCompile Include="Enemy.cpp">
+    <ClCompile Include="enemy\Enemy.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="EnemyBullet.cpp">
+    <ClCompile Include="enemy\EnemyBullet.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -179,10 +179,10 @@
     <ClInclude Include="player\playerBullet.h">
       <Filter>ヘッダー ファイル\player</Filter>
     </ClInclude>
-    <ClInclude Include="Enemy.h">
+    <ClInclude Include="enemy\Enemy.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="EnemyBullet.h">
+    <ClInclude Include="enemy\EnemyBullet.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

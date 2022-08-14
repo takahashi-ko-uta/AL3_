@@ -20,7 +20,8 @@ enum class Phase {
 	Leave,	  //離脱する
 };
 
-
+//自機のクラスの前方宣言
+class Player;
 
 class Enemy {
   public:
@@ -30,13 +31,17 @@ class Enemy {
 	void Update();
 	void Move();
 	void Attack();
+	//ワールド座標を取得
+	Vector3 GetWorldPosition();
 
 	void Draw(ViewProjection& viewProjection);
 
-
-
 	//発射間隔
 	static const int kFireInterval = 60;
+
+	
+	void SetPlayer(Player* player) { player_ = player; }
+
 
    private:
 	Model* model_ = nullptr;
@@ -50,8 +55,7 @@ class Enemy {
 	std::list<std::unique_ptr<EnemyBullet>> bullets_;
 	//発射タイマー
 	int32_t FireTimer = 0;
+	//自キャラ
+	Player* player_ = nullptr;
 };
 
-//Enemy::Enemy() {}
-//
-//Enemy::~Enemy() {}
