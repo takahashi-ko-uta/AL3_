@@ -84,7 +84,7 @@ void Enemy::Attack() {
 	assert(player_);
 
 	//弾の速度
-	const float kBulletSpeed = 0.1f;
+	const float kBulletSpeed = 0.5 * 0.1f;//バグで速いため0.1をかけている(要修正)--------------------------------
 
 	//Vector3 velocity(0, 0, kBulletSpeed);
 	Vector3 PLvec = player_->GetWorldPosition();//自キャラのワールド座標を取得
