@@ -104,6 +104,7 @@
     <ClCompile Include="player\playerBullet.cpp" />
     <ClCompile Include="scene\GameScene.cpp" />
     <ClCompile Include="affinTransformation.cpp" />
+    <ClCompile Include="Vector3Math.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="2d\DebugText.h" />
@@ -138,6 +139,7 @@
     <ClInclude Include="player\playerBullet.h" />
     <ClInclude Include="scene\GameScene.h" />
     <ClInclude Include="affinTransformation.h" />
+    <ClInclude Include="Vector3Math.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shaders\Obj.hlsli" />

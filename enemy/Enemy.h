@@ -13,6 +13,7 @@
 #include <memory>
 #include <list>
 #include "EnemyBullet.h"
+#include "Vector3Math.h"
 
 //行動フェーズ
 enum class Phase {

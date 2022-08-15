@@ -1,4 +1,4 @@
-#include "Enemy.h"
+#include "enemy/Enemy.h"
 #include "player/Player.h"
 #include "AxisIndicator.h"
 #include "MathUtility.h"
@@ -84,21 +84,18 @@ void Enemy::Attack() {
 	assert(player_);
 
 	//弾の速度
-	const float kBulletSpeed = -1.0f;
+	const float kBulletSpeed = 0.1f;
 
-	Vector3 velocity(0, 0, kBulletSpeed);
-	Vector3 A = player_->GetWorldPosition();//自キャラのワールド座標を取得
-	Vector3 B = GetWorldPosition();			//敵キャラのワールド座標を取得
-	Vector3 C;								//敵キャラ→自キャラの差分ベクトルを求める
-	C.x = B.x - A.x; 
-	C.y = B.y - A.y;
-	C.z = B.z - A.z;
-	
-	//ベクトルの正規化
-	float norm = sqrt(C.x * C.x + C.y * C.y + C.z * C.z);
-	float mag = 1 / norm;
-	//ベクトルの長さを、速さに合わせる
-	
+	//Vector3 velocity(0, 0, kBulletSpeed);
+	Vector3 PLvec = player_->GetWorldPosition();//自キャラのワールド座標を取得
+	Vector3 ENvec = GetWorldPosition();			//敵キャラのワールド座標を取得
+	Vector3 SPvec = Vector3Math::diff(PLvec, ENvec); //敵キャラ→自キャラの差分ベクトルを求める
+	SPvec = Vector3Math::Normalize(SPvec);				//ベクトルの正規化
+	Vector3 velocity(
+		SPvec.x * kBulletSpeed,
+		SPvec.y * kBulletSpeed,
+		SPvec.z * kBulletSpeed); //ベクトルの長さを、速さに合わせる
+
 	//速度ベクトルを自機の向きに合わせて回転させる
 	velocity.x = (velocity.x * worldTransforms_.matWorld_.m[0][0]) +
 	             (velocity.y * worldTransforms_.matWorld_.m[1][0]) +

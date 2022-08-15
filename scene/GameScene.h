@@ -14,7 +14,7 @@
 
 #include "affinTransformation.h"
 #include "player/Player.h"
-#include "Enemy.h"
+#include "enemy/Enemy.h"
 
 #define PI 3.141592
 
