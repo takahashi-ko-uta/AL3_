@@ -89,6 +89,8 @@ void GameScene::Initialize() {
 	enemy_->SetPlayer(player_);
 
 }
+
+
 void GameScene::Update()
 {
 	//デバックカメラの更新
@@ -101,10 +103,48 @@ void GameScene::Update()
 	enemy_->Update();
 }
 
-void GameScene::Draw() {
-	
-	
+void GameScene::CheckAllCollisons() 
+{
+	//判定対象AとBの座標
+	Vector3 posA, posB;
 
+	//自弾リストの取得
+	const std::list<std::unique_ptr<PlayerBullet>>& playerBullets = player_->GetBullet();
+	//敵弾リストの取得
+	const std::list<std::unique_ptr<EnemyBullet>>& enemyBullets = enemy_->GetBullet();
+
+#pragma region 自キャラと敵弾の当たり判定
+	//自キャラの座標
+	posA = player_->GetWorldPosition();
+	//自キャラと敵弾全ての当たり判定
+	for (const std::unique_ptr<EnemyBullet>& bullet : enemyBullets) 
+	{
+		posB = bullet->GetWorldPosition();
+		Vector3 posC = Vector3Math::diff(posA, posB);//posAとposBの差分
+		float L = (player_->radius + bullet->radius) * (player_->radius + bullet->radius);
+		if ((posB.x - posA.x) * (posB.x - posA.x) +
+			(posB.y - posA.y) * (posB.y - posA.y) +
+			(posB.z - posA.z) * (posB.z - posA.z) >= L)
+		{
+			//自キャラの衝突時コールバックを呼び出す
+			player_->OnCollision();
+			//敵弾の衝突時コールバックを呼び出す
+			bullet->OnCollision();
+		}
+	}
+
+#pragma endregion
+
+#pragma region 自弾と敵キャラの当たり判定
+#pragma endregion
+
+#pragma region 自弾と敵弾の当たり判定
+#pragma endregion
+
+}
+
+
+void GameScene::Draw() {
 	// コマンドリストの取得
 	ID3D12GraphicsCommandList* commandList = dxCommon_->GetCommandList();
 

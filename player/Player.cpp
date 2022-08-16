@@ -22,6 +22,7 @@ void Player::Initalize(Model* model, uint32_t textureHandle) {
 	worldTransforms_.Initialize();
 }
 
+
 void Player::Update() {
 	Move();   //ˆÚ“®ˆ—
 	Rotate(); //ù‰ñˆ—
@@ -145,6 +146,12 @@ Vector3 Player::GetWorldPosition()
 
 	return worldPos;
 }
+
+void Player::OnCollision() 
+{
+	//‰½‚à‚µ‚È‚¢
+}
+
 
 void Player::Draw(ViewProjection& viewProjection) {
 	model_->Draw(worldTransforms_, viewProjection, textureHandle_);

@@ -34,7 +34,10 @@ class Enemy {
 	void Attack();
 	//ワールド座標を取得
 	Vector3 GetWorldPosition();
-
+	// 衝突を検出したら呼び出されるコールバック関数
+	void OnCollision();
+	//弾リストを取得
+	const std::list<std::unique_ptr<EnemyBullet>>& GetBullet() { return bullets_; }
 	void Draw(ViewProjection& viewProjection);
 
 	//発射間隔
@@ -43,7 +46,7 @@ class Enemy {
 	
 	void SetPlayer(Player* player) { player_ = player; }
 
-
+	float radius = 3.0f;
    private:
 	Model* model_ = nullptr;
 	Input* input_ = nullptr;
@@ -54,6 +57,7 @@ class Enemy {
 	Phase phase_ = Phase::Approach;
 	//弾
 	std::list<std::unique_ptr<EnemyBullet>> bullets_;
+	
 	//発射タイマー
 	int32_t FireTimer = 0;
 	//自キャラ

@@ -34,6 +34,7 @@ void Enemy::ApproachInitalize()
 	FireTimer = kFireInterval;
 }
 
+
 void Enemy::Update() 
 { 
 	Move();
@@ -136,6 +137,11 @@ Vector3 Enemy::GetWorldPosition()
 
 	return worldPos;
 }
+
+void Enemy::OnCollision() {
+	//‰½‚à‚µ‚È‚¢
+}
+
 
 void Enemy::Draw(ViewProjection& viewProjection) 
 {
