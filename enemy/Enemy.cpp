@@ -25,8 +25,11 @@ void Enemy::Initalize(Model* model, uint32_t textureHandle)
 
 	//ワールド変換の初期化
 	worldTransforms_.Initialize();
-	worldTransforms_.translation_ = Vector3(0.0f, 5.0f, 20.0f);
+	worldTransforms_.translation_ = position_;
 }
+
+Vector3 Enemy::EnemyPosition(Vector3 vec3) 
+{ return vec3; }
 
 void Enemy::ApproachInitalize() 
 {
@@ -53,7 +56,7 @@ void Enemy::Move()
 	case Phase::Approach:
 	default:
 		//発射タイマーカウントダウン
-		FireTimer -= 1;
+		FireTimer -= 0.2;
 		//指定時間に達した
 		if (FireTimer == 0) 
 		{
@@ -65,6 +68,13 @@ void Enemy::Move()
 
 		//移動
 		move = {0.0f, 0.0f, -0.1f};
+		if (worldTransforms_.translation_.z < 20.0f) {
+			move.x = -0.2f;
+		}
+		if (worldTransforms_.translation_.z < 10.0f) {
+			move.x = 0.4f;
+		}
+
 		//既定の位置に到達したら離脱
 		if (worldTransforms_.translation_.z < 0.0f) {
 			phase_ = Phase::Leave;

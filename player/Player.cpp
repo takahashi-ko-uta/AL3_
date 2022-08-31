@@ -7,13 +7,14 @@
 #include <cassert>
 #include <random>
 
-void Player::Initalize(Model* model, uint32_t textureHandle) {
+void Player::Initalize(Model* modelPlayer,Model* modelBullet) {//, uint32_t textureHandle
 	// NULLポインタチェック
-	assert(model);
-
+	assert(modelPlayer);
+	assert(modelBullet);
 	//引数として受け取ってデータをメンバ変数に記録する
-	model_ = model;
-	textureHandle_ = textureHandle;
+	modelPlayer_ = modelPlayer;
+	modelBullet_ = modelBullet;
+	//textureHandle_ = textureHandle;
 	//シングルトンインスタンスを取得する
 	input_ = Input::GetInstance();
 	debugText_ = DebugText::GetInstance();
@@ -124,7 +125,7 @@ void Player::Attack() {
 
 		//弾を生成し、初期化
 		std::unique_ptr<PlayerBullet> newBullet = std::make_unique<PlayerBullet>();
-		newBullet->Initialize(model_, worldTransforms_.translation_,velocity);
+		newBullet->Initialize(modelBullet_, worldTransforms_.translation_,velocity);
 
 		//弾を登録する
 		bullets_.push_back(std::move(newBullet));
@@ -154,7 +155,7 @@ void Player::OnCollision()
 
 
 void Player::Draw(ViewProjection& viewProjection) {
-	model_->Draw(worldTransforms_, viewProjection, textureHandle_);
+	modelPlayer_->Draw(worldTransforms_, viewProjection);//, textureHandle_
 	//弾描画
 	for (std::unique_ptr<PlayerBullet>& bullet : bullets_) {
 		bullet->Draw(viewProjection);

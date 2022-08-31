@@ -15,6 +15,8 @@
 #include "EnemyBullet.h"
 #include "Vector3Math.h"
 
+class GameScene;
+
 //行動フェーズ
 enum class Phase {
 	Approach, //接近する
@@ -27,6 +29,7 @@ class Player;
 class Enemy {
   public:
 	void Initalize(Model* model, uint32_t textureHandle);
+	Vector3 EnemyPosition(Vector3 vec3);
 	void ApproachInitalize();
 
 	void Update();
@@ -45,6 +48,8 @@ class Enemy {
 
 	
 	void SetPlayer(Player* player) { player_ = player; }
+	void SetGameScene(GameScene* gamescene) { gameScene_ = gamescene; }
+
 
 	float radius = 3.0f;
    private:
@@ -62,5 +67,9 @@ class Enemy {
 	int32_t FireTimer = 0;
 	//自キャラ
 	Player* player_ = nullptr;
+
+	GameScene* gameScene_ = nullptr;
+
+	Vector3 position_ = Vector3(0.0f, 0.0f, 0.0f);
 };
 

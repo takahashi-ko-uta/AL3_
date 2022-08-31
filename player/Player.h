@@ -16,7 +16,7 @@
 
 class Player {
   public:
-	void Initalize(Model* model, uint32_t textureHandle);
+	void Initalize(Model* model,Model* modelBullet); //, uint32_t textureHandle
 
 	void Update();
 	void Move();
@@ -31,7 +31,8 @@ class Player {
 	void Draw(ViewProjection& viewProjection);
 	float radius = 3.0f;
   private:
-	Model* model_ = nullptr;
+	Model* modelPlayer_ = nullptr;
+	Model* modelBullet_ = nullptr;
 	Input* input_ = nullptr;
 	DebugText* debugText_ = nullptr;
 	WorldTransform worldTransforms_;
