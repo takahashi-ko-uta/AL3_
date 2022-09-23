@@ -155,6 +155,7 @@ void GameScene::CheckAllCollisons()
 
 #pragma region 自弾と敵キャラの当たり判定
 	////自キャラと敵弾全ての当たり判定
+	// 
 	//for (const std::unique_ptr<Enemy>& enemy : enemy_) {
 	//	posA = enemy->GetWorldPosition();
 	//	//自弾と敵キャラ全ての当たり判定
