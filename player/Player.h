@@ -14,6 +14,8 @@
 #include <memory>
 #include <list>
 
+#include "Vector3Math.h"
+
 class Player {
   public:
 	void Initalize(Model* model,Model* modelBullet); //, uint32_t textureHandle
@@ -39,5 +41,8 @@ class Player {
 	uint32_t textureHandle_ = 0;
 	//弾
 	std::list<std::unique_ptr<PlayerBullet>> bullets_;
+
+	//3Dレティクル用ワールドトランスフォーム
+	WorldTransform worldTransform3DReticle_;
 	
 };

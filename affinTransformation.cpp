@@ -74,7 +74,6 @@ void Translate(WorldTransform &worldTransform_) {//à⁄ìÆ
 	worldTransform_.matWorld_ = MathUtility ::Matrix4Identity();
 	worldTransform_.matWorld_ *= matTrans;
 }
-
 void Transfer(WorldTransform& worldTransform_) { //è„ÇÃëSÇƒ
   
 
@@ -125,9 +124,9 @@ void Transfer(WorldTransform& worldTransform_) { //è„ÇÃëSÇƒ
 
 }
 
-void VecMat(Vector3 vec3, WorldTransform& worldTransform_) 
+Vector3 VecMat(Vector3 vec3, WorldTransform& worldTransform_) 
 {
-	/*vec3.x = (vec3.x * worldTransform_.matWorld_.m[0][0]) +
+	vec3.x = (vec3.x * worldTransform_.matWorld_.m[0][0]) +
 	         (vec3.y * worldTransform_.matWorld_.m[1][0]) +
 	         (vec3.z * worldTransform_.matWorld_.m[2][0]) + 
 			 (0 * worldTransform_.matWorld_.m[3][0]);
@@ -140,11 +139,11 @@ void VecMat(Vector3 vec3, WorldTransform& worldTransform_)
 	vec3.z = (vec3.x * worldTransform_.matWorld_.m[0][2]) +
 	         (vec3.y * worldTransform_.matWorld_.m[1][2]) +
 	         (vec3.z * worldTransform_.matWorld_.m[2][2]) + 
-			 (0 * worldTransform_.matWorld_.m[3][2]);*/
+			 (0 * worldTransform_.matWorld_.m[3][2]);
 
-	//vec3.x = 10;
+	vec3.x = 10;
 	
-	//return vec3;
+	return vec3;
 }
 
 }

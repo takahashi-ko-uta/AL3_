@@ -7,6 +7,7 @@
 #include <cassert>
 #include <random>
 
+
 void Player::Initalize(Model* modelPlayer,Model* modelBullet) {//, uint32_t textureHandle
 	// NULLポインタチェック
 	assert(modelPlayer);
@@ -21,6 +22,7 @@ void Player::Initalize(Model* modelPlayer,Model* modelBullet) {//, uint32_t text
 
 	//ワールド変換の初期化
 	worldTransforms_.Initialize();
+	worldTransform3DReticle_.Initialize();
 }
 
 
@@ -28,6 +30,26 @@ void Player::Update() {
 	Move();   //移動処理
 	Rotate(); //旋回処理
 	Attack(); //攻撃処理
+
+	//自機のワールド座標から3Dレティクルのワールド座標を計算
+	{
+		//自機から3Dレティクルへの距離
+		const float kDistancePlayerTo3DReticle = 50.0f;
+		//自機から3Dレティクルへのオフセットへの距離
+		Vector3 offset = {0, 0, 1.0f};
+		//自機のワールド行列の回転を反映
+		offset = affinTransformation::VecMat(offset, worldTransforms_);
+		//ベクトルの長さを整える
+		offset = Vector3Math::Normalize(offset);
+		offset.x *= kDistancePlayerTo3DReticle;
+		offset.y *= kDistancePlayerTo3DReticle;
+		offset.z *= kDistancePlayerTo3DReticle;
+		//3Dレティクルの座標を設定
+		worldTransform3DReticle_.translation_ = offset;
+		affinTransformation::Transfer(worldTransform3DReticle_);
+		worldTransform3DReticle_.TransferMatrix();
+	}
+
 	//弾更新
 	for (std::unique_ptr<PlayerBullet>& bullet : bullets_) {
 		bullet->Update();
@@ -130,7 +152,13 @@ void Player::Attack() {
 		//弾を登録する
 		bullets_.push_back(std::move(newBullet));
 
-		
+		//自機から照準オブジェクトへのベクトル
+		velocity =
+		  Vector3Math::diff(worldTransform3DReticle_.translation_, worldTransforms_.translation_);
+		velocity = Vector3Math::Normalize(velocity);
+		velocity.x * kBulletSpeed;
+		velocity.y * kBulletSpeed;
+		velocity.z * kBulletSpeed;
 	}
 
 	
@@ -160,6 +188,7 @@ void Player::Draw(ViewProjection& viewProjection) {
 	for (std::unique_ptr<PlayerBullet>& bullet : bullets_) {
 		bullet->Draw(viewProjection);
 	}
+	modelBullet_->Draw(worldTransforms_, viewProjection);
 }
 
 
