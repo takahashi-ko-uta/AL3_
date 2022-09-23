@@ -39,7 +39,7 @@ class Enemy {
 	//弾リストを取得
 	const std::list<std::unique_ptr<EnemyBullet>>& GetBullet() { return bullets_; }
 	void Draw(ViewProjection& viewProjection);
-
+	bool IsDead() const { return isDead_; }
 	//発射間隔
 	static const int kFireInterval = 60;
 
@@ -62,5 +62,8 @@ class Enemy {
 	int32_t FireTimer = 0;
 	//自キャラ
 	Player* player_ = nullptr;
+
+	//デスフラグ
+	bool isDead_ = false;
 };
 
