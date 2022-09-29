@@ -6,20 +6,26 @@
 #include "affinTransformation.h"
 #include <cassert>
 #include <random>
+#include <string> 
 
-void Player::Initalize(Model* model, uint32_t textureHandle) {
+void Player::Initalize(Model* modelPlayer, Model* modelPLbullet) {
 	// NULLポインタチェック
-	assert(model);
+	assert(modelPlayer);
+	assert(modelPLbullet);
 
 	//引数として受け取ってデータをメンバ変数に記録する
-	model_ = model;
-	textureHandle_ = textureHandle;
+	model_ = modelPlayer;
+	modelPLbullet_ = modelPLbullet;
+	//textureHandle_ = textureHandle;
 	//シングルトンインスタンスを取得する
 	input_ = Input::GetInstance();
 	debugText_ = DebugText::GetInstance();
 
 	//ワールド変換の初期化
 	worldTransforms_.Initialize();
+	
+	//lifeの初期化
+	life = 3;
 }
 
 
@@ -35,6 +41,15 @@ void Player::Update() {
 	//デスフラグが立った弾を排除
 	bullets_.remove_if([](std::unique_ptr<PlayerBullet>& bullet) { return bullet->IsDead(); });
 
+}
+
+int Player::Life() 
+{
+	int x;
+
+	x = life;
+
+	return x;
 }
 
 void Player::Move() {
@@ -118,18 +133,23 @@ void Player::Attack() {
 		         (0 * worldTransforms_.matWorld_.m[3][2]);
 
 
-		//デバック
-		debugText_->SetPos(50, 70);
-		debugText_->Printf("velocity:(%f,%f,%f)", velocity.x, velocity.y, velocity.z);
+		//発射タイマーカウントダウン
+		FireTimer -= 1;
+		//指定時間に達した
+		if (FireTimer <= 0) {
+			//弾を生成し、初期化
+			std::unique_ptr<PlayerBullet> newBullet = std::make_unique<PlayerBullet>();
+			newBullet->Initialize(modelPLbullet_, worldTransforms_.translation_, velocity);
 
-		//弾を生成し、初期化
-		std::unique_ptr<PlayerBullet> newBullet = std::make_unique<PlayerBullet>();
-		newBullet->Initialize(model_, worldTransforms_.translation_,velocity);
-
-		//弾を登録する
-		bullets_.push_back(std::move(newBullet));
-
+			//弾を登録する
+			bullets_.push_back(std::move(newBullet));
+			//タイマーを戻す
+			FireTimer = kFireInterval;
+		}
 		
+	} 
+	else {
+		FireTimer = 0;
 	}
 
 	
@@ -148,13 +168,13 @@ Vector3 Player::GetWorldPosition()
 }
 
 void Player::OnCollision() 
-{
-	//何もしない
+{ 
+	life = life - 1;
 }
 
 
 void Player::Draw(ViewProjection& viewProjection) {
-	model_->Draw(worldTransforms_, viewProjection, textureHandle_);
+	model_->Draw(worldTransforms_, viewProjection);
 	//弾描画
 	for (std::unique_ptr<PlayerBullet>& bullet : bullets_) {
 		bullet->Draw(viewProjection);

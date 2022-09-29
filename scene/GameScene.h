@@ -35,6 +35,10 @@ class GameScene {
 
 	//3Dモデル
 	Model* model_ = nullptr;
+	Model* modelPlayer_ = nullptr;
+	Model* modelPLbullet_ = nullptr;
+	Model* modelEnemy_ = nullptr;
+	Model* modelENbullet_ = nullptr;
 	//ワールドトランスフォームビュープロジェクション
 	WorldTransform worldTransforms_[100];
 	//ビュープロジェクション
@@ -63,8 +67,12 @@ class GameScene {
 	DebugText* debugText_ = nullptr;
 	Audio* audio_ = nullptr;
 	
+	int playerLife;
+	int enemyLife;
 
 	/// <summary>
 	/// ゲームシーン用
+	int gameScene = 0; 
+
 	/// </summary>
 };

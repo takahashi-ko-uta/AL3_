@@ -5,14 +5,20 @@
 #include "AxisIndicator.h"
 #include "MathUtility.h"
 #include <random>
-
+#include <string> 
 #include "affinTransformation.h"
+#include <iostream>
 
 GameScene::GameScene() {}
 
 GameScene::~GameScene()
 { 
 	delete model_;
+	delete modelPlayer_;
+	delete modelPLbullet_;
+	delete modelEnemy_;
+	delete modelENbullet_;
+
 	delete debugCamera_;
 	delete player_;
 	delete enemy_;
@@ -30,6 +36,10 @@ void GameScene::Initialize() {
 
 	//モデル生成
 	model_ = Model::Create();
+	modelPlayer_ = Model::CreateFromOBJ("player", true);
+	modelPLbullet_ = Model::CreateFromOBJ("PLbullet", true);
+	modelEnemy_ = Model::CreateFromOBJ("enemy", true);
+	modelENbullet_ = Model::CreateFromOBJ("ENbullet", true);
 
 	//乱数シード生成器
 	std::random_device seed_gen;
@@ -78,45 +88,92 @@ void GameScene::Initialize() {
 	//自キャラの生成
 	player_ = new Player();
 	//自キャラの初期化
-	player_->Initalize(model_,textureHandle_PL_);
+	player_->Initalize(modelPlayer_,modelPLbullet_);
 
 	//敵キャラの生成
 	enemy_ = new Enemy();
 	//敵キャラの初期化
-	enemy_->Initalize(model_, textureHandle_EN_);
+	enemy_->Initalize(modelEnemy_,modelENbullet_);
 
 	//敵キャラに自キャラのアドレスを渡す
 	enemy_->SetPlayer(player_);
 
 }
 
-
 void GameScene::Update()
 {
 	//デバックカメラの更新
 	debugCamera_->Update();
+	
+	switch (gameScene){
+#pragma region タイトル
+	 case 0: //タイトル
+	
+		debugText_->SetPos(400, 250);
+		debugText_->SetScale(5);
+		debugText_->Printf("ShootingGame");
+		
+		debugText_->SetPos(530, 500);
+		debugText_->SetScale(2);
+		debugText_->Printf("--pleaseSPACE--");
 
-	////デスフラグの立った弾を削除
-	//enemyBullets_.remove_if([](std::unique_ptr<EnemyBullet>& bullet) { return bullet->IsDead(); });
-	////デスフラグの立った弾を削除
-	//enemy_.remove_if([](std::unique_ptr<Enemy>& enemy) { return enemy->IsDead(); });
-	//自キャラの更新
-	player_->Update();
+		if (input_->PushKey(DIK_SPACE)) {
+			 gameScene = 1;
+		}
+		 break;
+#pragma endregion
+	 
+#pragma region ゲーム本編
+	 case 1://ゲームプレイ
+	         //自キャラの更新
+		 player_->Update();
+		 enemy_->Update();
+		 //衝突判定
+		 CheckAllCollisons();
+		 playerLife = player_->Life();
+		 enemyLife = enemy_->Life();
+		 if (playerLife <= 0) //負けたとき
+		 {
+			 //gameScene = 3;
+		 } 
+		 else if (enemyLife <= 0)//勝ったとき 
+		 {
+			 gameScene = 2;
+		 }
+		 break;
+#pragma endregion
 
-	enemy_->Update();
+#pragma region リザルト
+	 case 2://勝ったとき
 
-	////弾更新
-	//for (std::unique_ptr<Enemy>& enemy : enemy_) {
-	//	//敵キャラの更新
-	//	enemy->Update();
-	//}
-	////弾更新
-	//for (std::unique_ptr<EnemyBullet>& bullet : enemyBullets_) {
-	//	bullet->Update();
-	//}
+		 debugText_->SetPos(400, 250);
+		 debugText_->SetScale(5);
+		 debugText_->Printf("GameClear");
+		 debugText_->SetPos(530, 500);
+		 debugText_->SetScale(2);
+		 debugText_->Printf("--pleaseEnter--");
 
-	//衝突判定
-	CheckAllCollisons();
+		 if (input_->PushKey(DIK_RETURN)) {
+			 gameScene = 0;
+		 }
+		 break;
+	 case 3://負けたとき
+
+		 debugText_->SetPos(480, 250);
+		 debugText_->SetScale(5);
+		 debugText_->Printf("GameOver");
+		 debugText_->SetPos(530, 500);
+		 debugText_->SetScale(2);
+		 debugText_->Printf("--pleaseEnter--");
+
+		 if (input_->PushKey(DIK_RETURN)) {
+			 gameScene = 0;
+		 }
+		 break;
+#pragma endregion
+	}
+
+	
 }
 
 void GameScene::CheckAllCollisons() 
@@ -203,7 +260,6 @@ void GameScene::CheckAllCollisons()
 #pragma endregion
 }
 
-
 void GameScene::Draw() {
 	// コマンドリストの取得
 	ID3D12GraphicsCommandList* commandList = dxCommon_->GetCommandList();
@@ -227,25 +283,13 @@ void GameScene::Draw() {
 	// 3Dオブジェクト描画前処理
 	Model::PreDraw(commandList);
 	
+	if (gameScene == 1) {
+		//自キャラの描画
+		player_->Draw(viewProjection_);
+		//敵キャラの描画
+		enemy_->Draw(viewProjection_);
+	}
 	
-
-	/// <summary>
-	/// ここに3Dオブジェクトの描画処理を追加できる
-	/// </summary>
-	/// 
-	//3Dモデル描画
-	
-	//自キャラの描画
-	player_->Draw(viewProjection_);
-
-	//敵キャラの描画
-	enemy_->Draw(viewProjection_);
-
-
-	//ライン描画が参照するビュープロジェクションを指定する(アドレス渡し)
-
-	
-
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
 #pragma endregion

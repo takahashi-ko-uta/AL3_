@@ -14,7 +14,7 @@
 #include <list>
 #include "EnemyBullet.h"
 #include "Vector3Math.h"
-
+#include <random>
 //行動フェーズ
 enum class Phase {
 	Approach, //接近する
@@ -26,7 +26,7 @@ class Player;
 
 class Enemy {
   public:
-	void Initalize(Model* model, uint32_t textureHandle);
+	void Initalize(Model* modelEnemy, Model* modelENbullet);
 	void ApproachInitalize();
 
 	void Update();
@@ -36,6 +36,7 @@ class Enemy {
 	Vector3 GetWorldPosition();
 	// 衝突を検出したら呼び出されるコールバック関数
 	void OnCollision();
+	int Life();
 	//弾リストを取得
 	const std::list<std::unique_ptr<EnemyBullet>>& GetBullet() { return bullets_; }
 	void Draw(ViewProjection& viewProjection);
@@ -49,6 +50,9 @@ class Enemy {
 	float radius = 3.0f;
    private:
 	Model* model_ = nullptr;
+	Model* modelEnemy_ = nullptr;
+	Model* modelENbullet_ = nullptr;
+
 	Input* input_ = nullptr;
 	DebugText* debugText_ = nullptr;
 	WorldTransform worldTransforms_;
@@ -65,5 +69,9 @@ class Enemy {
 
 	//デスフラグ
 	bool isDead_ = false;
+	int life = 3;
+
+	int movePattern = 0;
+	
 };
 

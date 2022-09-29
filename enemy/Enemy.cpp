@@ -8,14 +8,16 @@
 #include <cassert>
 #include <random>
 
-void Enemy::Initalize(Model* model, uint32_t textureHandle)
+void Enemy::Initalize(Model* modelEnemy, Model* modelENbullet) 
 {
 	// NULLポインタチェック
-	assert(model);
-
+	assert(modelEnemy);
+	assert(modelENbullet);
 	//引数として受け取ってデータをメンバ変数に記録する
-	model_ = model;
-	textureHandle_ = textureHandle;
+	model_ = modelEnemy;
+	modelEnemy_ = modelEnemy;
+	modelENbullet_ = modelENbullet;
+	//textureHandle_ = textureHandle;
 	//シングルトンインスタンスを取得する
 	input_ = Input::GetInstance();
 	debugText_ = DebugText::GetInstance();
@@ -34,7 +36,6 @@ void Enemy::ApproachInitalize()
 	FireTimer = kFireInterval;
 }
 
-
 void Enemy::Update() 
 { 
 	Move();
@@ -49,33 +50,96 @@ void Enemy::Update()
 void Enemy::Move() 
 {
 	Vector3 move = {0, 0, 0};
+	
+	//乱数シード生成器
+	std::random_device seed_gen;
+	//メルセンヌ・ツイスターの乱数エンジン
+	std::mt19937_64 engine(seed_gen());
+	//乱数範囲の指定
+	std::uniform_real_distribution<float> dist(0, 3); // dist(最大値,最小値)
+
+	
+
 	switch (phase_) {
 	case Phase::Approach:
 	default:
+#pragma region 攻撃
 		//発射タイマーカウントダウン
 		FireTimer -= 1;
 		//指定時間に達した
-		if (FireTimer == 0) 
+		if (FireTimer <= 0) 
 		{
 			//弾を発射
 			Attack();
 			//タイマーを戻す
 			FireTimer = kFireInterval;
 		}
+#pragma endregion
 
-		//移動
-		move = {0.0f, 0.0f, -0.1f};
-		//既定の位置に到達したら離脱
-		if (worldTransforms_.translation_.z < 0.0f) {
-			phase_ = Phase::Leave;
+#pragma region 移動
+		
+		switch (movePattern) {
+		case 0: //左上
+			if (worldTransforms_.translation_.x > -25.0f) {
+				worldTransforms_.translation_.x -= 0.1f;
+				if (worldTransforms_.translation_.y < 15) {
+					worldTransforms_.translation_.y += 0.05f;
+				}
+			} else {
+				phase_ = Phase::Leave;
+			}
+			break;
+		case 1: //右上
+			if (worldTransforms_.translation_.x < 25.0f) {
+				worldTransforms_.translation_.x += 0.1f;
+				if (worldTransforms_.translation_.y < 15) {
+					worldTransforms_.translation_.y += 0.05f;
+				}
+			} else {
+				phase_ = Phase::Leave;
+			}
+
+			break;
+		case 2: //右下
+			if (worldTransforms_.translation_.x < 25.0f) {
+				worldTransforms_.translation_.x += 0.1f;
+				if (worldTransforms_.translation_.y > -15) {
+					worldTransforms_.translation_.y -= 0.05f;
+				}
+			} else {
+				phase_ = Phase::Leave;
+			}
+			break;
+		case 3: //左下
+			if (worldTransforms_.translation_.x > -25.0f) {
+				worldTransforms_.translation_.x -= 0.1f;
+				if (worldTransforms_.translation_.y > -15) {
+					worldTransforms_.translation_.y -= 0.05f;
+				}
+			} else {
+				phase_ = Phase::Leave;
+			}
+			break;
 		}
+
+
+
+#pragma endregion
+		
+
+		////既定の位置に到達したら離脱
+		//if (worldTransforms_.translation_.z < 0.0f) {
+		//	phase_ = Phase::Leave;
+		//}
 		break;
 	case Phase::Leave:
-		move = {-0.2f, 0.0f, -0.2f};
+	   movePattern =  dist(engine);
+	   phase_ = Phase::Approach;
 		break;
 	}
 	//座標移動(ベクトル加算)
-	worldTransforms_.translation_ += move;
+	//worldTransforms_.translation_ += move;
+	worldTransforms_.translation_.z =20; 
 	affinTransformation::Transfer(worldTransforms_);
 	//行列更新
 	worldTransforms_.TransferMatrix();
@@ -119,7 +183,7 @@ void Enemy::Attack() {
 
 	//弾を生成し、初期化
 	std::unique_ptr<EnemyBullet> newBullet = std::make_unique<EnemyBullet>();
-	newBullet->Initialize(model_, worldTransforms_.translation_, velocity);
+	newBullet->Initialize(modelENbullet_, worldTransforms_.translation_, velocity);
 
 	//弾を登録する
 	bullets_.push_back(std::move(newBullet));
@@ -138,14 +202,19 @@ Vector3 Enemy::GetWorldPosition()
 	return worldPos;
 }
 
-void Enemy::OnCollision() {
-	//何もしない
-}
+void Enemy::OnCollision() { life = life - 1; }
 
+int Enemy::Life() {
+	int x;
+
+	x = life;
+
+	return x;
+}
 
 void Enemy::Draw(ViewProjection& viewProjection) 
 {
-	model_->Draw(worldTransforms_, viewProjection, textureHandle_);
+	model_->Draw(worldTransforms_, viewProjection);
 	//弾描画
 	for (std::unique_ptr<EnemyBullet>& bullet : bullets_) {
 		bullet->Draw(viewProjection);
