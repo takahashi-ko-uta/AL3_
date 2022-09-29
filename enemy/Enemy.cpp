@@ -25,6 +25,7 @@ void Enemy::Initalize(Model* modelEnemy, Model* modelENbullet)
 	//接近フェーズの初期化
 	ApproachInitalize();
 
+	life = 3;
 	//ワールド変換の初期化
 	worldTransforms_.Initialize();
 	worldTransforms_.translation_ = Vector3(0.0f, 5.0f, 20.0f);
@@ -177,9 +178,9 @@ void Enemy::Attack() {
 	             (velocity.z * worldTransforms_.matWorld_.m[2][2]) +
 	             (0 * worldTransforms_.matWorld_.m[3][2]);
 
-	//デバック
-	debugText_->SetPos(50, 70);
-	debugText_->Printf("velocity:(%f,%f,%f)", velocity.x, velocity.y, velocity.z);
+	////デバック
+	//debugText_->SetPos(50, 70);
+	//debugText_->Printf("velocity:(%f,%f,%f)", velocity.x, velocity.y, velocity.z);
 
 	//弾を生成し、初期化
 	std::unique_ptr<EnemyBullet> newBullet = std::make_unique<EnemyBullet>();

@@ -60,19 +60,18 @@ class GameScene {
 
 
 	void Draw();
-
+	int gameScene = 0; 
   private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
 	DebugText* debugText_ = nullptr;
 	Audio* audio_ = nullptr;
 	
-	int playerLife;
-	int enemyLife;
+	int playerLife = 3;
+	int enemyLife = 3;
 
 	/// <summary>
 	/// ゲームシーン用
-	int gameScene = 0; 
 
 	/// </summary>
 };

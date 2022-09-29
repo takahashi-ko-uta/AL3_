@@ -32,10 +32,11 @@ void PlayerBullet::Update() {
 	if (--deathTimer_ <= 0) {
 		isDead_ = true;
 	}
-
 }
 
-void PlayerBullet::OnCollision() { IsDead(); }
+void PlayerBullet::OnCollision() {
+	isDead_ = true;
+}
 
 Vector3 PlayerBullet::GetWorldPosition() {
 	//ƒ[ƒ‹ƒhÀ•W‚ð“ü‚ê‚é•Ï”

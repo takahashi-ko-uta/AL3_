@@ -76,7 +76,7 @@ void GameScene::Initialize() {
 	//デバックカメラの生成
 	debugCamera_ = new DebugCamera(600, 600);
 	//軸方向表示の表示を有効にする
-	AxisIndicator::GetInstance()->SetVisible(true);
+	AxisIndicator::GetInstance()->SetVisible(false);
 	//軸方向は参照するビュープロジェクションを指定する
 	//AxisIndicator::GetInstance()->SetTargetViewProjection(&debugCamera_->GetViewProjection());
 	AxisIndicator::GetInstance()->SetTargetViewProjection(&viewProjection_);
@@ -94,7 +94,7 @@ void GameScene::Initialize() {
 	enemy_ = new Enemy();
 	//敵キャラの初期化
 	enemy_->Initalize(modelEnemy_,modelENbullet_);
-
+	
 	//敵キャラに自キャラのアドレスを渡す
 	enemy_->SetPlayer(player_);
 
@@ -104,7 +104,10 @@ void GameScene::Update()
 {
 	//デバックカメラの更新
 	debugCamera_->Update();
-	
+	//自弾リストの取得
+	const std::list<std::unique_ptr<PlayerBullet>>& playerBullets = player_->GetBullet();
+	//敵弾リストの取得
+	const std::list<std::unique_ptr<EnemyBullet>>& enemyBullets = enemy_->GetBullet();
 	switch (gameScene){
 #pragma region タイトル
 	 case 0: //タイトル
@@ -134,7 +137,7 @@ void GameScene::Update()
 		 enemyLife = enemy_->Life();
 		 if (playerLife <= 0) //負けたとき
 		 {
-			 //gameScene = 3;
+			 gameScene = 3;
 		 } 
 		 else if (enemyLife <= 0)//勝ったとき 
 		 {
@@ -153,6 +156,16 @@ void GameScene::Update()
 		 debugText_->SetScale(2);
 		 debugText_->Printf("--pleaseEnter--");
 
+		 //初期化
+		 enemy_->Initalize(modelEnemy_, modelENbullet_);
+		 player_->Initalize(modelPlayer_, modelPLbullet_);
+		 for (const std::unique_ptr<EnemyBullet>& bullet : enemyBullets) {
+			 bullet->OnCollision(); 
+		 }
+		 for (const std::unique_ptr<PlayerBullet>& bullet : playerBullets) {
+			 bullet->OnCollision();
+		 }
+
 		 if (input_->PushKey(DIK_RETURN)) {
 			 gameScene = 0;
 		 }
@@ -165,6 +178,17 @@ void GameScene::Update()
 		 debugText_->SetPos(530, 500);
 		 debugText_->SetScale(2);
 		 debugText_->Printf("--pleaseEnter--");
+
+		  //初期化
+		 enemy_->Initalize(modelEnemy_, modelENbullet_);
+		 player_->Initalize(modelPlayer_, modelPLbullet_);
+		 for (const std::unique_ptr<EnemyBullet>& bullet : enemyBullets) {
+			 bullet->OnCollision();
+		 }
+		 for (const std::unique_ptr<PlayerBullet>& bullet : playerBullets) {
+			 bullet->OnCollision();
+		 }
+
 
 		 if (input_->PushKey(DIK_RETURN)) {
 			 gameScene = 0;

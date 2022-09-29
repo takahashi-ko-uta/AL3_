@@ -23,7 +23,7 @@ void Player::Initalize(Model* modelPlayer, Model* modelPLbullet) {
 
 	//ワールド変換の初期化
 	worldTransforms_.Initialize();
-	
+	worldTransforms_.translation_ = Vector3(0.0f, 0.0f, 0.0f);
 	//lifeの初期化
 	life = 3;
 }
@@ -86,11 +86,11 @@ void Player::Move() {
 	//行列更新
 	worldTransforms_.TransferMatrix();
 
-	//デバック
-	debugText_->SetPos(50, 50);
-	debugText_->Printf(
-	  "worldTransforms_.translation_:(%f,%f,%f)", worldTransforms_.translation_.x,
-	  worldTransforms_.translation_.y, worldTransforms_.translation_.z);
+	////デバック
+	//debugText_->SetPos(50, 50);
+	//debugText_->Printf(
+	//  "worldTransforms_.translation_:(%f,%f,%f)", worldTransforms_.translation_.x,
+	//  worldTransforms_.translation_.y, worldTransforms_.translation_.z);
 #pragma endregion
 }
 
