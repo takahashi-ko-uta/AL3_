@@ -15,6 +15,7 @@
 #include "affinTransformation.h"
 #include "player/Player.h"
 #include "enemy/Enemy.h"
+#include "NotesHit.h"
 
 #define PI 3.141592
 
@@ -50,6 +51,8 @@ class GameScene {
 	
 	//敵キャラ
 	Enemy* enemy_ = nullptr;
+
+	NotesHit* notesHit_ = nullptr;
 
 	void Update();
 	void CheckAllCollisons();

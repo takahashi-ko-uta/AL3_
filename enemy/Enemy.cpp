@@ -1,15 +1,16 @@
 #include "enemy/Enemy.h"
-#include "player/Player.h"
 #include "AxisIndicator.h"
 #include "MathUtility.h"
+#include "NotesHit.h"
 #include "PrimitiveDrawer.h"
 #include "TextureManager.h"
 #include "affinTransformation.h"
+#include "player/Player.h"
 #include <cassert>
 #include <random>
 
-void Enemy::Initalize(Model* model, uint32_t textureHandle)
-{
+
+void Enemy::Initalize(Model* model, uint32_t textureHandle) {
 	// NULLポインタチェック
 	assert(model);
 
@@ -25,18 +26,15 @@ void Enemy::Initalize(Model* model, uint32_t textureHandle)
 
 	//ワールド変換の初期化
 	worldTransforms_.Initialize();
-	worldTransforms_.translation_ = Vector3(0.0f, 5.0f, 20.0f);
+	worldTransforms_.translation_ = Vector3(20.0f, -10.0f, 0.0f);
 }
 
-void Enemy::ApproachInitalize() 
-{
+void Enemy::ApproachInitalize() {
 	//発射タイマー初期化
 	FireTimer = kFireInterval;
 }
 
-
-void Enemy::Update() 
-{ 
+void Enemy::Update() {
 	Move();
 	for (std::unique_ptr<EnemyBullet>& bullet : bullets_) {
 		bullet->Update();
@@ -46,8 +44,7 @@ void Enemy::Update()
 	bullets_.remove_if([](std::unique_ptr<EnemyBullet>& bullet) { return bullet->IsDead(); });
 }
 
-void Enemy::Move() 
-{
+void Enemy::Move() {
 	Vector3 move = {0, 0, 0};
 	switch (phase_) {
 	case Phase::Approach:
@@ -55,8 +52,7 @@ void Enemy::Move()
 		//発射タイマーカウントダウン
 		FireTimer -= 1;
 		//指定時間に達した
-		if (FireTimer == 0) 
-		{
+		if (FireTimer == 0) {
 			//弾を発射
 			Attack();
 			//タイマーを戻す
@@ -64,7 +60,7 @@ void Enemy::Move()
 		}
 
 		//移動
-		move = {0.0f, 0.0f, -0.1f};
+		move = {0.0f, 0.0f, -0.0f};
 		//既定の位置に到達したら離脱
 		if (worldTransforms_.translation_.z < 0.0f) {
 			phase_ = Phase::Leave;
@@ -82,20 +78,22 @@ void Enemy::Move()
 }
 
 void Enemy::Attack() {
-	assert(player_);
+	assert(notesHit_);
+	//assert(player_);
 
 	//弾の速度
-	const float kBulletSpeed = 0.5 * 0.1f;//バグで速いため0.1をかけている(要修正)--------------------------------
+	const float kBulletSpeed =
+	  0.1 * 0.1f; //バグで速いため0.1をかけている(要修正)--------------------------------
 
-	//Vector3 velocity(0, 0, kBulletSpeed);
-	Vector3 PLvec = player_->GetWorldPosition();//自キャラのワールド座標を取得
-	Vector3 ENvec = GetWorldPosition();			//敵キャラのワールド座標を取得
+	// Vector3 velocity(0, 0, kBulletSpeed);
+	//Vector3 PLvec = player_->GetWorldPosition(); //自キャラのワールド座標を取得
+	Vector3 PLvec = notesHit_->GetWorldPosition();     //自キャラのワールド座標を取得
+	Vector3 ENvec = GetWorldPosition();            //敵キャラのワールド座標を取得
 	Vector3 SPvec = Vector3Math::diff(PLvec, ENvec); //敵キャラ→自キャラの差分ベクトルを求める
-	SPvec = Vector3Math::Normalize(SPvec);				//ベクトルの正規化
+	SPvec = Vector3Math::Normalize(SPvec); //ベクトルの正規化
 	Vector3 velocity(
-		SPvec.x * kBulletSpeed,
-		SPvec.y * kBulletSpeed,
-		SPvec.z * kBulletSpeed); //ベクトルの長さを、速さに合わせる
+	  SPvec.x * kBulletSpeed, SPvec.y * kBulletSpeed,
+	  SPvec.z * kBulletSpeed); //ベクトルの長さを、速さに合わせる
 
 	//速度ベクトルを自機の向きに合わせて回転させる
 	velocity.x = (velocity.x * worldTransforms_.matWorld_.m[0][0]) +
@@ -123,11 +121,9 @@ void Enemy::Attack() {
 
 	//弾を登録する
 	bullets_.push_back(std::move(newBullet));
-
 }
 
-Vector3 Enemy::GetWorldPosition() 
-{
+Vector3 Enemy::GetWorldPosition() {
 	//ワールド座標を入れる変数
 	Vector3 worldPos;
 	//ワールド行列の平行移動成分を取得
@@ -142,25 +138,10 @@ void Enemy::OnCollision() {
 	//何もしない
 }
 
-
-void Enemy::Draw(ViewProjection& viewProjection) 
-{
+void Enemy::Draw(ViewProjection& viewProjection) {
 	model_->Draw(worldTransforms_, viewProjection, textureHandle_);
 	//弾描画
 	for (std::unique_ptr<EnemyBullet>& bullet : bullets_) {
 		bullet->Draw(viewProjection);
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -16,6 +16,7 @@ GameScene::~GameScene()
 	delete debugCamera_;
 	delete player_;
 	delete enemy_;
+	delete notesHit_;
 }
 
 void GameScene::Initialize() {
@@ -80,6 +81,11 @@ void GameScene::Initialize() {
 	//自キャラの初期化
 	player_->Initalize(model_,textureHandle_PL_);
 
+
+	notesHit_ = new NotesHit();
+	notesHit_->Initalize(model_, textureHandle_PL_);
+
+
 	//敵キャラの生成
 	enemy_ = new Enemy();
 	//敵キャラの初期化
@@ -87,6 +93,9 @@ void GameScene::Initialize() {
 
 	//敵キャラに自キャラのアドレスを渡す
 	enemy_->SetPlayer(player_);
+	enemy_->SetNotesHit(notesHit_);
+
+	
 
 }
 
@@ -105,6 +114,7 @@ void GameScene::Update()
 
 	enemy_->Update();
 
+	notesHit_->Update();
 	////弾更新
 	//for (std::unique_ptr<Enemy>& enemy : enemy_) {
 	//	//敵キャラの更新
@@ -129,6 +139,35 @@ void GameScene::CheckAllCollisons()
 	//敵弾リストの取得
 	const std::list<std::unique_ptr<EnemyBullet>>& enemyBullets = enemy_->GetBullet();
 
+	#pragma region NotesHitと敵弾の当たり判定
+	//自キャラの座標
+	posA = notesHit_->GetWorldPosition();
+
+	//自キャラと敵弾全ての当たり判定
+	for (const std::unique_ptr<EnemyBullet>& bullet : enemyBullets) {
+		//敵弾の座標
+		posB = bullet->GetWorldPosition();
+
+		const float AR = 1;
+		const float BR = 1;
+
+		float A = pow((posB.x - posA.x), 2) + pow((posB.y - posA.y), 2) + pow((posB.z - posA.z), 2);
+		float B = pow((AR + BR), 2);
+
+		if (A <= B) {
+			//自キャラの衝突時コールバックを呼び出す
+			notesHit_->OnCollision();
+			//敵弾の衝突時コールバックを呼び出す
+			bullet->OnCollision();
+		}
+		else
+		{
+			bullet->NotCollision();
+		}
+	}
+#pragma endregion
+
+
 #pragma region 自キャラと敵弾の当たり判定
 	//自キャラの座標
 	posA = player_->GetWorldPosition();
@@ -149,6 +188,8 @@ void GameScene::CheckAllCollisons()
 			player_->OnCollision();
 			//敵弾の衝突時コールバックを呼び出す
 			bullet->OnCollision();
+		} else {
+			bullet->NotCollision();
 		}
 	}
 #pragma endregion
@@ -241,7 +282,7 @@ void GameScene::Draw() {
 	//敵キャラの描画
 	enemy_->Draw(viewProjection_);
 
-
+	notesHit_->Draw(viewProjection_);
 	//ライン描画が参照するビュープロジェクションを指定する(アドレス渡し)
 
 	

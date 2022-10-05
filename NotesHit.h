@@ -14,7 +14,7 @@
 #include <math.h>
 #include <memory>
 
-class Player {
+class NotesHit {
   public:
 	void Initalize(Model* model, uint32_t textureHandle);
 
