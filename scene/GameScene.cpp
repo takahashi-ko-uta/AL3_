@@ -89,34 +89,36 @@ void GameScene::Initialize() {
 	enemy_->SetPlayer(player_);
 
 }
-
-
 void GameScene::Update()
 {
 	//デバックカメラの更新
 	debugCamera_->Update();
+	if (input_->PushKey(DIK_1))
+	{
+		flag = 1;
+	}
+	
+	if (input_->PushKey(DIK_2)) {
+		flag = 0;
+		enemy_->SetPlayer(player_);
+		skydome_->Initialze(modelSkydome_);
+		enemy_->Initalize(model_, textureHandle_EN_);
+		player_->Initalize(modelPlayer_, model_);
+	}
 
-	////デスフラグの立った弾を削除
-	//enemyBullets_.remove_if([](std::unique_ptr<EnemyBullet>& bullet) { return bullet->IsDead(); });
-	////デスフラグの立った弾を削除
-	//enemy_.remove_if([](std::unique_ptr<Enemy>& enemy) { return enemy->IsDead(); });
-	//自キャラの更新
-	player_->Update();
+	if (flag == 1) 
+	{
+		//自キャラの更新
+		player_->Update();
 
-	enemy_->Update();
+		//敵キャラの更新
+		enemy_->Update();
 
-	////弾更新
-	//for (std::unique_ptr<Enemy>& enemy : enemy_) {
-	//	//敵キャラの更新
-	//	enemy->Update();
-	//}
-	////弾更新
-	//for (std::unique_ptr<EnemyBullet>& bullet : enemyBullets_) {
-	//	bullet->Update();
-	//}
+		skydome_->Update();
+	}
 
-	//衝突判定
-	CheckAllCollisons();
+	UpdateEnemyPopCommands();
+	
 }
 
 void GameScene::CheckAllCollisons() 
@@ -132,75 +134,120 @@ void GameScene::CheckAllCollisons()
 #pragma region 自キャラと敵弾の当たり判定
 	//自キャラの座標
 	posA = player_->GetWorldPosition();
-
 	//自キャラと敵弾全ての当たり判定
-	for (const std::unique_ptr<EnemyBullet>& bullet : enemyBullets) {
-		//敵弾の座標
+	for (const std::unique_ptr<EnemyBullet>& bullet : enemyBullets) 
+	{
 		posB = bullet->GetWorldPosition();
-
-		const float AR = 1;
-		const float BR = 1;
-
-		float A = pow((posB.x - posA.x), 2) + pow((posB.y - posA.y), 2) + pow((posB.z - posA.z), 2);
-		float B = pow((AR + BR), 2);
-
-		if (A <= B) {
+		Vector3 posC = Vector3Math::diff(posA, posB);//posAとposBの差分
+		float L = (player_->radius + bullet->radius) * (player_->radius + bullet->radius);
+		if ((posB.x - posA.x) * (posB.x - posA.x) +
+			(posB.y - posA.y) * (posB.y - posA.y) +
+			(posB.z - posA.z) * (posB.z - posA.z) >= L)
+		{
 			//自キャラの衝突時コールバックを呼び出す
 			player_->OnCollision();
 			//敵弾の衝突時コールバックを呼び出す
 			bullet->OnCollision();
 		}
 	}
+
 #pragma endregion
 
 #pragma region 自弾と敵キャラの当たり判定
-	posA = enemy_->GetWorldPosition();
-	//自弾と敵キャラ全ての当たり判定
-	for (const std::unique_ptr<PlayerBullet>& bullet : playerBullets) {
-		//自弾の座標
-		posB = bullet->GetWorldPosition();
-
-		const float AR = 1;
-		const float BR = 1;
-
-		float A = pow((posB.x - posA.x), 2) + pow((posB.y - posA.y), 2) + pow((posB.z - posA.z), 2);
-		float B = pow((AR + BR), 2);
-
-		if (A <= B) {
-			//自キャラの衝突時コールバックを呼び出す
-			enemy_->OnCollision();
-			//敵弾の衝突時コールバックを呼び出す
-			bullet->OnCollision();
-		}
-	}
 #pragma endregion
 
 #pragma region 自弾と敵弾の当たり判定
-	//自キャラと敵弾全ての当たり判定
-	for (const std::unique_ptr<EnemyBullet>& enemybullet : enemyBullets) {
-		//自弾と敵キャラ全ての当たり判定
-		for (const std::unique_ptr<PlayerBullet>& playerbullet : playerBullets) {
-			//自弾の座標
-			posA = playerbullet->GetWorldPosition();
-			//自弾の座標
-			posB = enemybullet->GetWorldPosition();
+#pragma endregion
 
-			const float AR = 1;
-			const float BR = 1;
+}
 
-			float A =
-			  pow((posB.x - posA.x), 2) + pow((posB.y - posA.y), 2) + pow((posB.z - posA.z), 2);
-			float B = pow((AR + BR), 2);
+void GameScene::AddEnemyBullet(std::unique_ptr<EnemyBullet> enemyBullet) 
+{
+	enemyBullets_.push_back(std::move(enemyBullet));
+}
 
-			if (A <= B) {
-				//自キャラの衝突時コールバックを呼び出す
-				enemybullet->OnCollision();
-				//敵弾の衝突時コールバックを呼び出す
-				playerbullet->OnCollision();
-			}
+void GameScene::LoadEnemyPopData() 
+{
+	//ファイルを開く
+	std::ifstream file;
+	file.open("Resources/enemyPop.csv ");
+	assert(file.is_open());
+
+	//ファイルの内容を文字列ストリームにコピー
+	enemyPopCommand << file.rdbuf();
+
+	//ファイルを閉じる
+	file.close();
+}
+
+void GameScene::UpdateEnemyPopCommands() 
+{
+	//待機処理
+	if (waitFlag == true) {
+		waitTimer--;
+		if (waitTimer <= 0) {
+			waitFlag = false;
+		}
+		return;
+	}
+
+	//1行分の文字列を入れる変数
+	std::string line;
+
+	//コマンド実行ループ
+	while (std::getline(enemyPopCommand,line)) {
+		//１行分の文字列をストリームに変換して解析しやすくする
+		std::istringstream line_stream(line);
+
+		std::string word;
+		// ,区切りで行の先頭文字列を取得
+		std::getline(line_stream, word, ',');
+
+		// "//"から始まる行はコメント
+		if (word.find("//") == 0) {
+			//コメント行を飛ばす
+			continue;
+		}
+
+		//POPコマンド
+		if (word.find("POP") == 0) {
+			//x座標
+			std::getline(line_stream, word, ',');
+			float x = (float)std::atof(word.c_str());
+
+			// y座標
+			std::getline(line_stream, word, ',');
+			float y = (float)std::atof(word.c_str());
+
+			// z座標
+			std::getline(line_stream, word, ',');
+			float z = (float)std::atof(word.c_str());
+
+			//敵を発生させる
+			enemy_->EnemyPosition(Vector3(x, y, z));
+		}
+		//WAITコマンド
+		else if (word.find("WAIT") == 0) {
+			std::getline(line_stream, word, ',');
+
+			//待ち時間
+			int32_t waitTime = atoi(word.c_str());
+
+			//待機開始
+			int waitFlag = true;
+			float waitTimer = waitTime;
+
+			//コマンドループを抜ける
+			break;
 		}
 	}
-#pragma endregion
+	//デバック
+	debugText_->SetPos(50, 90);
+	debugText_->Printf("waitFlag:%f", waitFlag);
+
+	debugText_->SetPos(50, 110);
+	debugText_->Printf("waitTimer:%f", waitTimer);
+
 }
 
 

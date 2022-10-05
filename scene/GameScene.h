@@ -24,10 +24,19 @@
 class GameScene {
 
   public: // メンバ関数
+	/// <summary>
+	/// コンストクラタ
+	/// </summary>
 	GameScene();
 
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~GameScene();
 
+	/// <summary>
+	/// 初期化
+	/// </summary>
 	void Initialize();
 	//テクスチャハンドル
 	uint32_t textureHandle_PL_ = 0;// 自機のテクスチャ
@@ -42,6 +51,7 @@ class GameScene {
 	//デバックカメラ
 	DebugCamera* debugCamera_ = nullptr;
 	//デバックカメラ有効
+	//bool isDebugCameraActive_ = false;
 	//カメラ上方向の角度
 	float viewAngle = 0.0f;
 
@@ -51,10 +61,16 @@ class GameScene {
 	//敵キャラ
 	Enemy* enemy_ = nullptr;
 
+	Skydome* skydome_ = nullptr;
+
 	void Update();
 	void CheckAllCollisons();
+	void AddEnemyBullet(std::unique_ptr<EnemyBullet>enemyBullet);
 
 
+	/// <summary>
+	/// 描画
+	/// </summary>
 	void Draw();
 
   private: // メンバ変数
@@ -62,8 +78,13 @@ class GameScene {
 	Input* input_ = nullptr;
 	DebugText* debugText_ = nullptr;
 	Audio* audio_ = nullptr;
-	
+	std::list<std::unique_ptr<EnemyBullet>> enemyBullets_;
 
+	// 敵発生コマンド
+	std::stringstream enemyPopCommand;
+	int waitFlag = true;
+	float waitTimer = 10.0f;
+	int flag = 0;
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>
