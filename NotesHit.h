@@ -10,11 +10,11 @@
 #include "Sprite.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
+#include <list>
 #include <math.h>
 #include <memory>
-#include <list>
 
-class Player {
+class NotesHit {
   public:
 	void Initalize(Model* model, uint32_t textureHandle);
 
@@ -29,7 +29,7 @@ class Player {
 	const std::list<std::unique_ptr<PlayerBullet>>& GetBullet() { return bullets_; }
 
 	void Draw(ViewProjection& viewProjection);
-	float radius = 6.0f;//Œ³‚Í3.0f
+	float radius = 6.0f; //Œ³‚Í3.0f
   private:
 	Model* model_ = nullptr;
 	Input* input_ = nullptr;

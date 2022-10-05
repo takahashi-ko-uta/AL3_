@@ -7,6 +7,7 @@
 #include "affinTransformation.h"
 #include <cassert>
 #include <random>
+#include "NotesHit.h"
 
 void Enemy::Initalize(Model* model, uint32_t textureHandle)
 {
@@ -25,7 +26,7 @@ void Enemy::Initalize(Model* model, uint32_t textureHandle)
 
 	//ワールド変換の初期化
 	worldTransforms_.Initialize();
-	worldTransforms_.translation_ = Vector3(0.0f, 5.0f, 20.0f);
+	worldTransforms_.translation_ = Vector3(20.0f, -10.0f, 0.0f);
 }
 
 void Enemy::ApproachInitalize() 
@@ -64,7 +65,7 @@ void Enemy::Move()
 		}
 
 		//移動
-		move = {0.0f, 0.0f, -0.1f};
+		move = {0.0f, 0.0f, -0.0f};
 		//既定の位置に到達したら離脱
 		if (worldTransforms_.translation_.z < 0.0f) {
 			phase_ = Phase::Leave;
@@ -82,13 +83,13 @@ void Enemy::Move()
 }
 
 void Enemy::Attack() {
-	assert(player_);
+	assert(notesHit_);
 
 	//弾の速度
-	const float kBulletSpeed = 0.5 * 0.1f;//バグで速いため0.1をかけている(要修正)--------------------------------
+	const float kBulletSpeed = 0.1 * 0.1f; //バグで速いため0.1をかけている(要修正)--------------------------------
 
 	//Vector3 velocity(0, 0, kBulletSpeed);
-	Vector3 PLvec = player_->GetWorldPosition();//自キャラのワールド座標を取得
+	Vector3 PLvec = notesHit_->GetWorldPosition();   //自キャラのワールド座標を取得
 	Vector3 ENvec = GetWorldPosition();			//敵キャラのワールド座標を取得
 	Vector3 SPvec = Vector3Math::diff(PLvec, ENvec); //敵キャラ→自キャラの差分ベクトルを求める
 	SPvec = Vector3Math::Normalize(SPvec);				//ベクトルの正規化

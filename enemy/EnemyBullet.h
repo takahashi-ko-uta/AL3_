@@ -9,6 +9,7 @@ class EnemyBullet {
 	void Update();
 	// 衝突を検出したら呼び出されるコールバック関数
 	void OnCollision();
+	void NotCollision();
 	Vector3 GetWorldPosition();
 
 
@@ -20,6 +21,8 @@ class EnemyBullet {
 	WorldTransform worldTransform_;
 	Model* model_ = nullptr;
 	uint32_t textureHandle_ = 0;
+	uint32_t textureHandle_red = 0;
+	uint32_t textureHandle_blue = 0;
 	//速度
 	Vector3 velocity_;
 	//寿命
@@ -28,4 +31,5 @@ class EnemyBullet {
 	int32_t deathTimer_ = kLifeTime;
 	//デスフラグ
 	bool isDead_ = false;
+	bool isHit = false;
 };

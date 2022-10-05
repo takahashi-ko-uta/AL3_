@@ -24,6 +24,8 @@ enum class Phase {
 //自機のクラスの前方宣言
 class Player;
 
+class NotesHit;
+
 class Enemy {
   public:
 	void Initalize(Model* model, uint32_t textureHandle);
@@ -45,6 +47,7 @@ class Enemy {
 
 	
 	void SetPlayer(Player* player) { player_ = player; }
+	void SetNotesHit(NotesHit* notesHit) { notesHit_ = notesHit; }
 
 	float radius = 3.0f;
    private:
@@ -62,6 +65,8 @@ class Enemy {
 	int32_t FireTimer = 0;
 	//自キャラ
 	Player* player_ = nullptr;
+	NotesHit* notesHit_ = nullptr;
+	
 
 	//デスフラグ
 	bool isDead_ = false;

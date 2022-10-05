@@ -14,11 +14,12 @@ void EnemyBullet::Initialize(Model* model, const Vector3& position, const Vector
 	//引数として受け取ってデータをメンバ変数に記録する
 	model_ = model;
 	textureHandle_ = TextureManager::Load("black.jpg");
-
+	textureHandle_red = TextureManager::Load("red.png");
+	textureHandle_blue = TextureManager::Load("blue.jpg");
 	worldTransform_.Initialize();
 	//引数で受け取った初期座標をセット
 	worldTransform_.translation_ = {position.x, position.y, position.z};
-
+	worldTransform_.scale_ = Vector3(1.0f, 2.0f, 1.0f);
 	//引数で受け取った速度をメンバ変数に代入する
 	velocity_ = velocity;
 }
@@ -36,8 +37,15 @@ void EnemyBullet::Update() {
 
 void EnemyBullet::OnCollision() 
 { 
-	isDead_ = true;
+	//isDead_ = true;
+	isHit = true;
+
 }
+void EnemyBullet::NotCollision() {
+	// isDead_ = true;
+	isHit = false;
+}
+
 
 Vector3 EnemyBullet::GetWorldPosition() {
 	//ワールド座標を入れる変数
@@ -54,5 +62,13 @@ Vector3 EnemyBullet::GetWorldPosition() {
 
 
 void EnemyBullet::Draw(const ViewProjection& viewProjection) {
-	model_->Draw(worldTransform_, viewProjection, textureHandle_);
+	if (isHit == false) 
+	{
+		model_->Draw(worldTransform_, viewProjection, textureHandle_red);
+	}
+	else
+	{
+		model_->Draw(worldTransform_, viewProjection, textureHandle_blue);
+	}
+	
 }
