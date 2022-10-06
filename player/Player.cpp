@@ -129,13 +129,12 @@ void Player::Attack() {
 
 	 if (input_->TriggerKey(DIK_SPACE)) 
 	 {
-		isTrigger = true;
+		isTrigger_ = true;
 	 }
 	 else
 	 {
-		 isTrigger = false;
+		 isTrigger_ = false;
 	 }
-
 }
 
 Vector3 Player::GetWorldPosition() {
@@ -156,7 +155,7 @@ void Player::OnCollision() {
 void Player::Draw(ViewProjection& viewProjection) {
 
 	//model_->Draw(worldTransforms_, viewProjection, textureHandle_);
-	if (isTrigger == true) //‰Ÿ‚µ‚½‚Æ‚«
+	if (isTrigger_ == true) //‰Ÿ‚µ‚½‚Æ‚«
 	{
 		model_->Draw(worldTransforms_, viewProjection, textureHandle_red);
 	}

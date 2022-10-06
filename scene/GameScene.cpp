@@ -88,6 +88,7 @@ void GameScene::Initialize() {
 
 	//敵キャラの生成
 	enemy_ = new Enemy();
+	//bullet_ = new EnemyBullet();
 	//敵キャラの初期化
 	enemy_->Initalize(model_, textureHandle_EN_);
 
@@ -115,9 +116,12 @@ void GameScene::Update()
 	//notesHitの更新
 	notesHit_->Update();
 
-
 	//衝突判定
 	CheckAllCollisons();
+
+	//成功判定
+	TriggerJudge();
+	
 }
 
 void GameScene::CheckAllCollisons() 
@@ -130,7 +134,7 @@ void GameScene::CheckAllCollisons()
 	//敵弾リストの取得
 	const std::list<std::unique_ptr<EnemyBullet>>& enemyBullets = enemy_->GetBullet();
 
-	#pragma region NotesHitと敵弾の当たり判定
+#pragma region NotesHitと敵弾の当たり判定
 	//自キャラの座標
 	posA = notesHit_->GetWorldPosition();
 
@@ -157,12 +161,9 @@ void GameScene::CheckAllCollisons()
 		}
 	}
 
-	debugText_->SetPos(50, 70);
-	debugText_->Printf(
-	  "posA:(%f,%f,%f) , posB:(%f,%f,%f)", posA.x, posA.y, posA.z, posB.x, posB.y, posB.z);
+	
 	
 #pragma endregion
-
 
 #pragma region 自キャラと敵弾の当たり判定
 	{
@@ -246,6 +247,30 @@ void GameScene::CheckAllCollisons()
 #pragma endregion
 }
 
+void GameScene::TriggerJudge() 
+{
+	
+	bool playerTrigger = false;
+	bool bulletTrigger = false;
+	//敵弾リストの取得
+	const std::list<std::unique_ptr<EnemyBullet>>& enemyBullets = enemy_->GetBullet();
+
+	playerTrigger = player_->GetTrigger();
+	for (const std::unique_ptr<EnemyBullet>& bullet : enemyBullets) {
+		//敵弾の座標
+		bulletTrigger = bullet->GetTrigger();
+		
+		if (playerTrigger == true && bulletTrigger == true) {
+			judge = judge + 1;
+		}
+	}
+
+	
+	
+
+	debugText_->SetPos(50, 70);
+	debugText_->Printf("judge:%d ,PLtri:%d , BLtri:%d", judge,playerTrigger,bulletTrigger);
+}
 
 void GameScene::Draw() {
 	// コマンドリストの取得

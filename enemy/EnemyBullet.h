@@ -12,6 +12,7 @@ class EnemyBullet {
 	void NotCollision();
 	Vector3 GetWorldPosition();
 
+	int GetTrigger() const { return isTrigger_; }
 	void Draw(const ViewProjection& viewProjection);
 
 	bool IsDead() const { return isDead_; }
@@ -31,5 +32,5 @@ class EnemyBullet {
 	int32_t deathTimer_ = kLifeTime;
 	//デスフラグ
 	bool isDead_ = false;
-	bool isHit = false;
+	bool isTrigger_ = false;
 };

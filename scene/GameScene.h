@@ -30,11 +30,24 @@ class GameScene {
 	~GameScene();
 
 	void Initialize();
+	
+
+	void Update();
+	void CheckAllCollisons();
+	void TriggerJudge();//成功判定
+
+	void Draw();
+
+  private: // メンバ変数
+	DirectXCommon* dxCommon_ = nullptr;
+	Input* input_ = nullptr;
+	DebugText* debugText_ = nullptr;
+	Audio* audio_ = nullptr;
 	//テクスチャハンドル
-	uint32_t textureHandle_PL_ = 0;		// 自機のテクスチャ
-	uint32_t textureHandle_EN_ = 0;		// 敵のテクスチャ
-	uint32_t textureHandle_Black_ = 0;	//黒一色のテクスチャ
-	//3Dモデル
+	uint32_t textureHandle_PL_ = 0;    // 自機のテクスチャ
+	uint32_t textureHandle_EN_ = 0;    // 敵のテクスチャ
+	uint32_t textureHandle_Black_ = 0; //黒一色のテクスチャ
+	// 3Dモデル
 	Model* model_ = nullptr;
 	//ワールドトランスフォームビュープロジェクション
 	WorldTransform worldTransforms_[100];
@@ -48,25 +61,15 @@ class GameScene {
 
 	//自キャラ
 	Player* player_ = nullptr;
-	
+
 	//敵キャラ
 	Enemy* enemy_ = nullptr;
 
+	//EnemyBullet* bullet_ = nullptr;
 	NotesHit* notesHit_ = nullptr;
-
-	void Update();
-	void CheckAllCollisons();
-
-
-	void Draw();
-
-  private: // メンバ変数
-	DirectXCommon* dxCommon_ = nullptr;
-	Input* input_ = nullptr;
-	DebugText* debugText_ = nullptr;
-	Audio* audio_ = nullptr;
+	bool BLtrigger = false;
+	uint16_t judge = 0;
 	
-
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>

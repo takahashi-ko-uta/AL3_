@@ -111,9 +111,7 @@ void Enemy::Attack() {
 	             (velocity.z * worldTransforms_.matWorld_.m[2][2]) +
 	             (0 * worldTransforms_.matWorld_.m[3][2]);
 
-	//デバック
-	debugText_->SetPos(50, 70);
-	debugText_->Printf("velocity:(%f,%f,%f)", velocity.x, velocity.y, velocity.z);
+
 
 	//弾を生成し、初期化
 	std::unique_ptr<EnemyBullet> newBullet = std::make_unique<EnemyBullet>();

@@ -14,6 +14,9 @@
 #include <math.h>
 #include <memory>
 
+
+class EnemyBullet;
+
 class Player {
   public:
 	void Initalize(Model* model, uint32_t textureHandle);
@@ -25,6 +28,8 @@ class Player {
 	Vector3 GetWorldPosition();
 	// 衝突を検出したら呼び出されるコールバック関数
 	void OnCollision();
+	bool GetTrigger() const { return isTrigger_; } 
+	
 	//弾リストを取得
 	const std::list<std::unique_ptr<PlayerBullet>>& GetBullet() { return bullets_; }
 
@@ -41,6 +46,6 @@ class Player {
 	//弾
 	std::list<std::unique_ptr<PlayerBullet>> bullets_;
 
-	bool isTrigger = false; 
+	bool isTrigger_ = false; 
 
 };

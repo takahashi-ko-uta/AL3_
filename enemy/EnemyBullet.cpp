@@ -35,12 +35,12 @@ void EnemyBullet::Update() {
 }
 
 void EnemyBullet::OnCollision() {
-	// isDead_ = true;
-	isHit = true;
+	//isDead_ = true;
+	isTrigger_ = true;
 }
 void EnemyBullet::NotCollision() {
 	// isDead_ = true;
-	isHit = false;
+	isTrigger_ = false;
 }
 
 Vector3 EnemyBullet::GetWorldPosition() {
@@ -56,7 +56,7 @@ Vector3 EnemyBullet::GetWorldPosition() {
 }
 
 void EnemyBullet::Draw(const ViewProjection& viewProjection) {
-	if (isHit == false) {
+	if (isTrigger_ == false) {
 		model_->Draw(worldTransform_, viewProjection, textureHandle_red);
 	} else {
 		model_->Draw(worldTransform_, viewProjection, textureHandle_blue);
