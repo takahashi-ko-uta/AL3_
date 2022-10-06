@@ -43,6 +43,8 @@ class GameScene {
 	Input* input_ = nullptr;
 	DebugText* debugText_ = nullptr;
 	Audio* audio_ = nullptr;
+
+	int scene;
 	//テクスチャハンドル
 	uint32_t textureHandle_PL_ = 0;    // 自機のテクスチャ
 	uint32_t textureHandle_EN_ = 0;    // 敵のテクスチャ
@@ -73,4 +75,7 @@ class GameScene {
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>
+	uint32_t titlePic[1] = {};
+	Sprite* title[1];
+	int titlenum;
 };

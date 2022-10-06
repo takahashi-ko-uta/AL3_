@@ -59,6 +59,11 @@ void GameScene::Initialize() {
 		affinTransformation::Transfer(worldTransform);
 		//行列の転送
 		worldTransform.TransferMatrix();
+
+		scene = 0;
+		//タイトル用
+		titlePic[0] = TextureManager::Load("title1.png");
+		title[0] = Sprite::Create(titlePic[0], {0, 0});
 	}
 	
 
@@ -107,20 +112,43 @@ void GameScene::Update()
 	debugCamera_->Update();
 
 
-	//自キャラの更新
-	player_->Update();
+	
+	
+	if (scene == 0) { //タイトル
+	}
+	if (input_->TriggerKey(DIK_SPACE)) {
+		scene = 1;
+	}
 
-	//敵キャラの更新
-	enemy_->Update();
+	switch (scene) {
+	case 0://タイトル
+		if (input_->TriggerKey(DIK_SPACE)) {
+			scene = 1;
+		}
+		break;
 
-	//notesHitの更新
-	notesHit_->Update();
+	case 1://ゲーム
+#pragma region 各更新処理
+		//自キャラの更新
+		player_->Update();
 
-	//衝突判定
-	CheckAllCollisons();
+		//敵キャラの更新
+		enemy_->Update();
 
-	//成功判定
-	TriggerJudge();
+		// notesHitの更新
+		notesHit_->Update();
+
+		//衝突判定
+		CheckAllCollisons();
+
+		//成功判定
+		TriggerJudge();
+#pragma endregion
+		
+		break;
+
+	}
+	
 	
 }
 
@@ -265,9 +293,6 @@ void GameScene::TriggerJudge()
 		}
 	}
 
-	
-	
-
 	debugText_->SetPos(50, 70);
 	debugText_->Printf("judge:%d ,PLtri:%d , BLtri:%d", judge,playerTrigger,bulletTrigger);
 }
@@ -327,7 +352,14 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに前景スプライトの描画処理を追加できる
 	/// </summary>
+	switch (scene) {
+	case 0:
+		title[titlenum]->Draw();
+		break;
+	case 1:
 
+		break;
+	}
 	// デバッグテキストの描画
 	debugText_->DrawAll(commandList);
 	//
