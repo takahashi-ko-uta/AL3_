@@ -14,6 +14,8 @@ void Player::Initalize(Model* model, uint32_t textureHandle) {
 	//引数として受け取ってデータをメンバ変数に記録する
 	model_ = model;
 	textureHandle_ = textureHandle;
+	textureHandle_red = TextureManager::Load("red.png");
+	textureHandle_blue = TextureManager::Load("blue.jpg");
 	//シングルトンインスタンスを取得する
 	input_ = Input::GetInstance();
 	debugText_ = DebugText::GetInstance();
@@ -40,17 +42,18 @@ void Player::Update() {
 void Player::Move() {
 #pragma region キャラクターの移動ベクトル
 	Vector3 move = {0, 0, 0};
-	//移動ベクトルの変更する処理
-	if (input_->PushKey(DIK_UP)) {
-		move.y += 0.5f;
-	} else if (input_->PushKey(DIK_DOWN)) {
-		move.y -= 0.5f;
-	} else if (input_->PushKey(DIK_LEFT)) {
-		move.x -= 0.5f;
-	} else if (input_->PushKey(DIK_RIGHT)) {
-		move.x += 0.5f;
+	{
+		////移動ベクトルの変更する処理
+		// if (input_->PushKey(DIK_UP)) {
+		//	move.y += 0.5f;
+		// } else if (input_->PushKey(DIK_DOWN)) {
+		//	move.y -= 0.5f;
+		// } else if (input_->PushKey(DIK_LEFT)) {
+		//	move.x -= 0.5f;
+		// } else if (input_->PushKey(DIK_RIGHT)) {
+		//	move.x += 0.5f;
+		// }
 	}
-
 	//座標移動(ベクトル加算)
 	worldTransforms_.translation_ += move;
 	affinTransformation::Transfer(worldTransforms_);
@@ -70,12 +73,6 @@ void Player::Move() {
 
 	//行列更新
 	worldTransforms_.TransferMatrix();
-
-	//デバック
-	debugText_->SetPos(50, 50);
-	debugText_->Printf(
-	  "worldTransforms_.translation_:(%f,%f,%f)", worldTransforms_.translation_.x,
-	  worldTransforms_.translation_.y, worldTransforms_.translation_.z);
 #pragma endregion
 }
 
@@ -94,39 +91,51 @@ void Player::Rotate() {
 }
 
 void Player::Attack() {
-	if (input_->PushKey(DIK_SPACE)) {
-		//弾の速度
-		const float kBulletSpeed = 1.0f;
-		Vector3 velocity(0, 0, kBulletSpeed);
-		//速度ベクトルを自機の向きに合わせて回転させる
-		// affinTransformation::VecMat(velocity, worldTransforms_);
+	{
+		// if (input_->PushKey(DIK_SPACE)) {
+		//	//弾の速度
+		//	const float kBulletSpeed = 1.0f;
+		//	Vector3 velocity(0, 0, kBulletSpeed);
+		//	//速度ベクトルを自機の向きに合わせて回転させる
+		//	// affinTransformation::VecMat(velocity, worldTransforms_);
 
-		velocity.x = (velocity.x * worldTransforms_.matWorld_.m[0][0]) +
-		             (velocity.y * worldTransforms_.matWorld_.m[1][0]) +
-		             (velocity.z * worldTransforms_.matWorld_.m[2][0]) +
-		             (0 * worldTransforms_.matWorld_.m[3][0]);
+		//	velocity.x = (velocity.x * worldTransforms_.matWorld_.m[0][0]) +
+		//	             (velocity.y * worldTransforms_.matWorld_.m[1][0]) +
+		//	             (velocity.z * worldTransforms_.matWorld_.m[2][0]) +
+		//	             (0 * worldTransforms_.matWorld_.m[3][0]);
 
-		velocity.y = (velocity.x * worldTransforms_.matWorld_.m[0][1]) +
-		             (velocity.y * worldTransforms_.matWorld_.m[1][1]) +
-		             (velocity.z * worldTransforms_.matWorld_.m[2][1]) +
-		             (0 * worldTransforms_.matWorld_.m[3][1]);
+		//	velocity.y = (velocity.x * worldTransforms_.matWorld_.m[0][1]) +
+		//	             (velocity.y * worldTransforms_.matWorld_.m[1][1]) +
+		//	             (velocity.z * worldTransforms_.matWorld_.m[2][1]) +
+		//	             (0 * worldTransforms_.matWorld_.m[3][1]);
 
-		velocity.z = (velocity.x * worldTransforms_.matWorld_.m[0][2]) +
-		             (velocity.y * worldTransforms_.matWorld_.m[1][2]) +
-		             (velocity.z * worldTransforms_.matWorld_.m[2][2]) +
-		             (0 * worldTransforms_.matWorld_.m[3][2]);
+		//	velocity.z = (velocity.x * worldTransforms_.matWorld_.m[0][2]) +
+		//	             (velocity.y * worldTransforms_.matWorld_.m[1][2]) +
+		//	             (velocity.z * worldTransforms_.matWorld_.m[2][2]) +
+		//	             (0 * worldTransforms_.matWorld_.m[3][2]);
 
-		//デバック
-		debugText_->SetPos(50, 70);
-		debugText_->Printf("velocity:(%f,%f,%f)", velocity.x, velocity.y, velocity.z);
+		//	//デバック
+		//	debugText_->SetPos(50, 70);
+		//	debugText_->Printf("velocity:(%f,%f,%f)", velocity.x, velocity.y, velocity.z);
 
-		//弾を生成し、初期化
-		std::unique_ptr<PlayerBullet> newBullet = std::make_unique<PlayerBullet>();
-		newBullet->Initialize(model_, worldTransforms_.translation_, velocity);
+		//	//弾を生成し、初期化
+		//	std::unique_ptr<PlayerBullet> newBullet = std::make_unique<PlayerBullet>();
+		//	newBullet->Initialize(model_, worldTransforms_.translation_, velocity);
 
-		//弾を登録する
-		bullets_.push_back(std::move(newBullet));
+		//	//弾を登録する
+		//	bullets_.push_back(std::move(newBullet));
+		//}
 	}
+
+	 if (input_->TriggerKey(DIK_SPACE)) 
+	 {
+		isTrigger = true;
+	 }
+	 else
+	 {
+		 isTrigger = false;
+	 }
+
 }
 
 Vector3 Player::GetWorldPosition() {
@@ -145,7 +154,17 @@ void Player::OnCollision() {
 }
 
 void Player::Draw(ViewProjection& viewProjection) {
-	model_->Draw(worldTransforms_, viewProjection, textureHandle_);
+
+	//model_->Draw(worldTransforms_, viewProjection, textureHandle_);
+	if (isTrigger == true) //押したとき
+	{
+		model_->Draw(worldTransforms_, viewProjection, textureHandle_red);
+	}
+	else //押していない時
+	{
+		model_->Draw(worldTransforms_, viewProjection, textureHandle_blue);
+	}
+
 	//弾描画
 	for (std::unique_ptr<PlayerBullet>& bullet : bullets_) {
 		bullet->Draw(viewProjection);

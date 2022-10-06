@@ -28,7 +28,7 @@ void GameScene::Initialize() {
 	//ファイル名を指定してテクスチャを読み込む
 	textureHandle_PL_ = TextureManager::Load("mario.jpg");
 	textureHandle_EN_ = TextureManager::Load("enemy.jpg");
-
+	textureHandle_Black_ = TextureManager::Load("black.jpg");
 	//モデル生成
 	model_ = Model::Create();
 
@@ -81,9 +81,9 @@ void GameScene::Initialize() {
 	//自キャラの初期化
 	player_->Initalize(model_,textureHandle_PL_);
 
-
+	//ノーツの当たり判定取るやつ
 	notesHit_ = new NotesHit();
-	notesHit_->Initalize(model_, textureHandle_PL_);
+	notesHit_->Initalize(model_, textureHandle_Black_);
 
 
 	//敵キャラの生成
@@ -105,25 +105,16 @@ void GameScene::Update()
 	//デバックカメラの更新
 	debugCamera_->Update();
 
-	////デスフラグの立った弾を削除
-	//enemyBullets_.remove_if([](std::unique_ptr<EnemyBullet>& bullet) { return bullet->IsDead(); });
-	////デスフラグの立った弾を削除
-	//enemy_.remove_if([](std::unique_ptr<Enemy>& enemy) { return enemy->IsDead(); });
+
 	//自キャラの更新
 	player_->Update();
 
+	//敵キャラの更新
 	enemy_->Update();
 
+	//notesHitの更新
 	notesHit_->Update();
-	////弾更新
-	//for (std::unique_ptr<Enemy>& enemy : enemy_) {
-	//	//敵キャラの更新
-	//	enemy->Update();
-	//}
-	////弾更新
-	//for (std::unique_ptr<EnemyBullet>& bullet : enemyBullets_) {
-	//	bullet->Update();
-	//}
+
 
 	//衝突判定
 	CheckAllCollisons();
@@ -165,32 +156,43 @@ void GameScene::CheckAllCollisons()
 			bullet->NotCollision();
 		}
 	}
+
+	debugText_->SetPos(50, 70);
+	debugText_->Printf(
+	  "posA:(%f,%f,%f) , posB:(%f,%f,%f)", posA.x, posA.y, posA.z, posB.x, posB.y, posB.z);
+	
 #pragma endregion
 
 
 #pragma region 自キャラと敵弾の当たり判定
-	//自キャラの座標
-	posA = player_->GetWorldPosition();
+	{
+		////自キャラの座標
+		// posA = player_->GetWorldPosition();
 
-	//自キャラと敵弾全ての当たり判定
-	for (const std::unique_ptr<EnemyBullet>& bullet : enemyBullets) {
-		//敵弾の座標
-		posB = bullet->GetWorldPosition();
+		////自キャラと敵弾全ての当たり判定
+		// for (const std::unique_ptr<EnemyBullet>& bullet : enemyBullets) {
+		//	//敵弾の座標
+		//	posB = bullet->GetWorldPosition();
 
-		const float AR = 1;
-		const float BR = 1;
+		//	const float AR = 1;
+		//	const float BR = 1;
 
-		float A = pow((posB.x - posA.x), 2) + pow((posB.y - posA.y), 2) + pow((posB.z - posA.z), 2);
-		float B = pow((AR + BR), 2);
+		//	float A = pow((posB.x - posA.x), 2) + pow((posB.y - posA.y), 2) + pow((posB.z - posA.z),
+		//2); 	float B = pow((AR + BR), 2);
 
-		if (A <= B) {
-			//自キャラの衝突時コールバックを呼び出す
-			player_->OnCollision();
-			//敵弾の衝突時コールバックを呼び出す
-			bullet->OnCollision();
-		} else {
-			bullet->NotCollision();
-		}
+		//	if (A <= B) {
+		//		//自キャラの衝突時コールバックを呼び出す
+		//		player_->OnCollision();
+		//		//敵弾の衝突時コールバックを呼び出す
+		//		bullet->OnCollision();
+		//	} else {
+		//		bullet->NotCollision();
+		//	}
+		//}
+
+		// debugText_->SetPos(50, 90);
+		// debugText_->Printf(
+		//   "posA:(%f,%f,%f) , posB:(%f,%f,%f)", posA.x, posA.y, posA.z, posB.x, posB.y, posB.z);
 	}
 #pragma endregion
 
@@ -282,7 +284,9 @@ void GameScene::Draw() {
 	//敵キャラの描画
 	enemy_->Draw(viewProjection_);
 
+	//notesHitの更新
 	notesHit_->Draw(viewProjection_);
+
 	//ライン描画が参照するビュープロジェクションを指定する(アドレス渡し)
 
 	

@@ -31,9 +31,9 @@ class GameScene {
 
 	void Initialize();
 	//テクスチャハンドル
-	uint32_t textureHandle_PL_ = 0;// 自機のテクスチャ
-	uint32_t textureHandle_EN_ = 0;// 敵のテクスチャ
-
+	uint32_t textureHandle_PL_ = 0;		// 自機のテクスチャ
+	uint32_t textureHandle_EN_ = 0;		// 敵のテクスチャ
+	uint32_t textureHandle_Black_ = 0;	//黒一色のテクスチャ
 	//3Dモデル
 	Model* model_ = nullptr;
 	//ワールドトランスフォームビュープロジェクション

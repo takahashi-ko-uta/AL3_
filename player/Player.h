@@ -36,6 +36,11 @@ class Player {
 	DebugText* debugText_ = nullptr;
 	WorldTransform worldTransforms_;
 	uint32_t textureHandle_ = 0;
+	uint32_t textureHandle_red = 0;
+	uint32_t textureHandle_blue = 0;
 	//’e
 	std::list<std::unique_ptr<PlayerBullet>> bullets_;
+
+	bool isTrigger = false; 
+
 };

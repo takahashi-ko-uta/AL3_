@@ -21,64 +21,15 @@ void NotesHit::Initalize(Model* model, uint32_t textureHandle) {
 
 	//ワールド変換の初期化
 	worldTransforms_.Initialize();
-	worldTransforms_.translation_ = Vector3(-20.0f, 0.0f, 0.0f);
+	worldTransforms_.translation_ = Vector3(0.0f, -10.0f, 0.0f);
 	worldTransforms_.scale_ = Vector3(2.0f, 1.0f, 1.0f);
 }
 
 void NotesHit::Update() {
-	Move();   //移動処理
+	
 	Rotate(); //旋回処理
-	Attack(); //攻撃処理
-	//弾更新
-	for (std::unique_ptr<PlayerBullet>& bullet : bullets_) {
-		bullet->Update();
-	}
-
-	//デスフラグが立った弾を排除
-	bullets_.remove_if([](std::unique_ptr<PlayerBullet>& bullet) { return bullet->IsDead(); });
 }
 
-void NotesHit::Move() {
-#pragma region キャラクターの移動ベクトル
-	Vector3 move = {0, 0, 0};
-	//移動ベクトルの変更する処理
-	if (input_->PushKey(DIK_UP)) {
-		move.y += 0.5f;
-	} else if (input_->PushKey(DIK_DOWN)) {
-		move.y -= 0.5f;
-	} else if (input_->PushKey(DIK_LEFT)) {
-		move.x -= 0.5f;
-	} else if (input_->PushKey(DIK_RIGHT)) {
-		move.x += 0.5f;
-	}
-
-	//座標移動(ベクトル加算)
-	worldTransforms_.translation_ += move;
-	affinTransformation::Transfer(worldTransforms_);
-
-#pragma region 移動制限
-	//移動限界座標
-	const float kMoveLimitX = 35.0f;
-	const float kMoveLimitY = 20.0f;
-
-	//範囲を超えない処理
-	worldTransforms_.translation_.x = max(worldTransforms_.translation_.x, -kMoveLimitX);
-	worldTransforms_.translation_.x = min(worldTransforms_.translation_.x, +kMoveLimitX);
-	worldTransforms_.translation_.y = max(worldTransforms_.translation_.y, -kMoveLimitY);
-	worldTransforms_.translation_.y = min(worldTransforms_.translation_.y, +kMoveLimitY);
-
-#pragma endregion
-
-	//行列更新
-	worldTransforms_.TransferMatrix();
-
-	//デバック
-	debugText_->SetPos(50, 50);
-	debugText_->Printf(
-	  "worldTransforms_.translation_:(%f,%f,%f)", worldTransforms_.translation_.x,
-	  worldTransforms_.translation_.y, worldTransforms_.translation_.z);
-#pragma endregion
-}
 
 void NotesHit::Rotate() {
 	Vector3 RotY = {0.0f, 0.0f, 0.0f};
@@ -92,42 +43,6 @@ void NotesHit::Rotate() {
 	affinTransformation::Transfer(worldTransforms_);
 	//行列更新
 	worldTransforms_.TransferMatrix();
-}
-
-void NotesHit::Attack() {
-	if (input_->PushKey(DIK_SPACE)) {
-		//弾の速度
-		const float kBulletSpeed = 1.0f;
-		Vector3 velocity(0, 0, kBulletSpeed);
-		//速度ベクトルを自機の向きに合わせて回転させる
-		// affinTransformation::VecMat(velocity, worldTransforms_);
-
-		velocity.x = (velocity.x * worldTransforms_.matWorld_.m[0][0]) +
-		             (velocity.y * worldTransforms_.matWorld_.m[1][0]) +
-		             (velocity.z * worldTransforms_.matWorld_.m[2][0]) +
-		             (0 * worldTransforms_.matWorld_.m[3][0]);
-
-		velocity.y = (velocity.x * worldTransforms_.matWorld_.m[0][1]) +
-		             (velocity.y * worldTransforms_.matWorld_.m[1][1]) +
-		             (velocity.z * worldTransforms_.matWorld_.m[2][1]) +
-		             (0 * worldTransforms_.matWorld_.m[3][1]);
-
-		velocity.z = (velocity.x * worldTransforms_.matWorld_.m[0][2]) +
-		             (velocity.y * worldTransforms_.matWorld_.m[1][2]) +
-		             (velocity.z * worldTransforms_.matWorld_.m[2][2]) +
-		             (0 * worldTransforms_.matWorld_.m[3][2]);
-
-		//デバック
-		debugText_->SetPos(50, 70);
-		debugText_->Printf("velocity:(%f,%f,%f)", velocity.x, velocity.y, velocity.z);
-
-		//弾を生成し、初期化
-		std::unique_ptr<PlayerBullet> newBullet = std::make_unique<PlayerBullet>();
-		newBullet->Initialize(model_, worldTransforms_.translation_, velocity);
-
-		//弾を登録する
-		bullets_.push_back(std::move(newBullet));
-	}
 }
 
 Vector3 NotesHit::GetWorldPosition() {
@@ -147,8 +62,5 @@ void NotesHit::OnCollision() {
 
 void NotesHit::Draw(ViewProjection& viewProjection) {
 	model_->Draw(worldTransforms_, viewProjection, textureHandle_);
-	//弾描画
-	for (std::unique_ptr<PlayerBullet>& bullet : bullets_) {
-		bullet->Draw(viewProjection);
-	}
+	
 }
